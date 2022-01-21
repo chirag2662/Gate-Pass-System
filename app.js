@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const session = require('express-session');
 const passport = require('passport');
 require('./auth');
-
+mongoose.connect("mongodb+srv://chirag:"+process.env.MONGO_PASSWORD+"@cluster0.7n70t.mongodb.net/studentDB")
 const app = express();
 
 app.use(express.static("public"));
@@ -20,7 +20,11 @@ function isLoggedIn(req, res, next) {
   req.user ? next() : res.sendStatus(401);
 }
 
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
+app.use(session({
+  secret: 'Gate pass System',
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -29,27 +33,31 @@ app.get('/', (req, res) => {
 });
 
 app.get('/auth/google',
-  passport.authenticate('google', { scope: [ 'email', 'profile' ] }
-));
+  passport.authenticate('google', {
+    scope: ['email', 'profile']
+  }));
 
-app.get( '/login/google',
-  passport.authenticate( 'google', {
+app.get('/login/google',
+  passport.authenticate('google', {
     successRedirect: '/protected',
     failureRedirect: '/auth/google/failure'
   })
 );
 
 app.get('/protected', isLoggedIn, (req, res) => {
-  mail= req.user.email;
+  mail = req.user.email;
   mail = mail.substr(-13, 13);
-  if(mail=="@iitbbs.ac.in")
-  {
-    var date = new Date();
-   date = date.getDate();
-  res.render("index",{user:req.user,date:date});}else{
+
+  if (mail == "@iitbbs.ac.in") {
+    res.render("index", {
+      user: req.user
+    });
+    console.log(req.user);
+
+  } else {
     res.send("Please log in with IIT Bhubaeswar ID")
   }
-  
+
 
 
 });
