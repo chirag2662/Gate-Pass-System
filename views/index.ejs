@@ -6,7 +6,8 @@
   </head>
   <body>
     <h1><%- date-%></h1>
-    <form action="/gaurd" method="post">
+    <h1>Welcome <%-user.displayName-%></h1>
+    <form action="/submit" method="post">
     <label>Roll Number</label> <input type="text" name="RollNumber" value="">
     <label>Name</label> <input type="text" name="Name" value="">
     <label>Leaving Date</label> <input type="date" name="date" value="">
