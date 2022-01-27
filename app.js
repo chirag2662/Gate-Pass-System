@@ -13,10 +13,8 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
-
-
-function isLoggedIn(req, res, next) {
+   //     <-----    login    ----->
+   function isLoggedIn(req, res, next) {
   req.user ? next() : res.sendStatus(401);
 }
 
@@ -27,6 +25,21 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+//   <----- Database ------>
+
+const studentSchema = {
+  SNo:Number,
+  GId:String,
+  name: String,
+  email:String,
+  RollNumber:String,
+  room:String,
+  date:String,
+  LReason:String
+}
+
+const Student = mongoose.model("student",studentSchema);
 
 app.get('/', (req, res) => {
   res.render("main")
@@ -45,14 +58,13 @@ app.get('/login/google',
 );
 
 app.get('/protected', isLoggedIn, (req, res) => {
-  mail = req.user.email;
-  mail = mail.substr(-13, 13);
+  var mail = req.user._json.domain;
 
-  if (mail == "@iitbbs.ac.in") {
+  if (mail == 'iitbbs.ac.in') {
     res.render("index", {
       user: req.user
     });
-    console.log(req.user);
+
 
   } else {
     res.send("Please log in with IIT Bhubaeswar ID")
@@ -63,13 +75,27 @@ app.get('/protected', isLoggedIn, (req, res) => {
 });
 
 app.post('/submit', (req, res) => {
-  req.logout();
-  req.session.destroy();
-  res.send('Goodbye!');
+  Student.find({},(err,result)=>{
+
+  const student = new Student({
+    SNo:result.length+1,
+    GId:req.user.id,
+    name: req.user.displayName,
+    email:req.user.email,
+    RollNumber:req.body.roll,
+    room:req.body.room,
+    date:req.body.date,
+    LReason:req.body.reason
+  });
+  student.save();
+});
+
+
+  res.send("GatePass Requested submitted succesfully");
 });
 
 app.get('/auth/google/failure', (req, res) => {
-  res.send('Failed to authenticate..');
+  res.send('Failed to authenticate.');
 });
 
 
