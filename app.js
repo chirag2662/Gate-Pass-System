@@ -1,105 +1,52 @@
 const express = require("express");
+const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const ejs = require("ejs");
+const morgan = require("morgan");
+const path = require("path");
 const mongoose = require("mongoose");
-const session = require('express-session');
-const passport = require('passport');
-require('./auth');
-mongoose.connect("mongodb+srv://chirag:"+process.env.MONGO_PASSWORD+"@cluster0.7n70t.mongodb.net/studentDB")
+const passport = require("passport");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const connectDB = require("./config/db");
+const authRouter = require("./routes/authRoutes");
+
+dotenv.config();
+
+require("./config/passport")(passport);
+
+connectDB();
+
 const app = express();
 
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 app.use(express.static("public"));
-app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-   //     <-----    login    ----->
-   function isLoggedIn(req, res, next) {
-  req.user ? next() : res.sendStatus(401);
-}
-
-app.use(session({
-  secret: 'Gate pass System',
-  resave: false,
-  saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-//   <----- Database ------>
-
-const studentSchema = {
-  SNo:Number,
-  GId:String,
-  name: String,
-  email:String,
-  RollNumber:String,
-  room:String,
-  date:String,
-  LReason:String
-}
-
-const Student = mongoose.model("student",studentSchema);
-
-app.get('/', (req, res) => {
-  res.render("main")
-});
-
-app.get('/auth/google',
-  passport.authenticate('google', {
-    scope: ['email', 'profile']
-  }));
-
-app.get('/login/google',
-  passport.authenticate('google', {
-    successRedirect: '/protected',
-    failureRedirect: '/auth/google/failure'
+app.set("view engine", "ejs");
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
   })
 );
 
-app.get('/protected', isLoggedIn, (req, res) => {
-  var mail = req.user._json.domain;
+//Session
+app.use(
+  session({
+    secret: "gate-pass-system",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
+  })
+);
 
-  if (mail == 'iitbbs.ac.in') {
-    res.render("index", {
-      user: req.user
-    });
+//Passwort Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
+const PORT = process.env.PORT || 3000;
 
-  } else {
-    res.send("Please log in with IIT Bhubaeswar ID")
-  }
+app.use(express.static(path.join(__dirname, "public")));
 
+app.use("/", authRouter);
 
-
-});
-
-app.post('/submit', (req, res) => {
-  Student.find({},(err,result)=>{
-
-  const student = new Student({
-    SNo:result.length+1,
-    GId:req.user.id,
-    name: req.user.displayName,
-    email:req.user.email,
-    RollNumber:req.body.roll,
-    room:req.body.room,
-    date:req.body.date,
-    LReason:req.body.reason
-  });
-  student.save();
-});
-
-
-  res.send("GatePass Requested submitted succesfully");
-});
-
-app.get('/auth/google/failure', (req, res) => {
-  res.send('Failed to authenticate.');
-});
-
-
-
-app.listen(3000, function() {
-  console.log("Server started on port 3000.");
-});
+app.listen(PORT, console.log(`Server running at ${PORT}`));

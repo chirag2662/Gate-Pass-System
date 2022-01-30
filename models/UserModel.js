@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const Schema=mongoose.Schema;
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   mailId: {
     type: String,
     required: true,
@@ -14,19 +15,19 @@ const UserSchema = new mongoose.Schema({
   },
   rollNo: {
     type: String,
-    required: true,
+    // required: true,
   },
   branch: {
     type: String,
-    required: true,
+    // required: true,
   },
   phoneNo: {
     type: Number,
-    required: true,
+    // required: true,
   },
   roomNo: {
     type: String,
-    required: true,
+    // required: true,
   },
   requests: [{ type: Schema.Types.ObjectId, ref: "request" }],
 });
