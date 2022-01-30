@@ -8,7 +8,9 @@ const passport = require("passport");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
+
 const authRouter = require("./routes/authRoutes");
+const userRouter=require('./routes/userRoutes');
 
 dotenv.config();
 
@@ -48,5 +50,6 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", authRouter);
+app.use('/user',userRouter);
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));

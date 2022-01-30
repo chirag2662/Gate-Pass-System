@@ -16,14 +16,10 @@ router.get(
 
 router.get('/login/google',
 passport.authenticate('google', {
-  successRedirect: '/profile-page',
+  successRedirect: '/user/profile-page',
   failureRedirect: '/'
 })
 );
-
-router.get('/profile-page', ensureAuth, (req, res) => {
-    res.render("userProfile");
-});
 
 router.get("/logout", (req, res) => {
   req.logout();
