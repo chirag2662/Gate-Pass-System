@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Schema=mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   mailId: {
@@ -29,7 +29,11 @@ const UserSchema = new Schema({
     type: String,
     // required: true,
   },
-  requests: [{ type: Schema.Types.ObjectId, ref: "request" }],
+  hostel: {
+    type: String,
+    // required: true,
+  },
+  requests: [{ type: mongoose.Schema.ObjectId, ref: "request" }],
 });
 
 module.exports = mongoose.model("user", UserSchema);

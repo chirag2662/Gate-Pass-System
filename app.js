@@ -10,9 +10,9 @@ const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
 
 const authRouter = require("./routes/authRoutes");
-const userRouter=require('./routes/userRoutes');
+const userRouter = require("./routes/userRoutes");
 
-dotenv.config();
+dotenv.config({ path: "./config.env" });
 
 require("./config/passport")(passport);
 
@@ -47,9 +47,9 @@ app.use(passport.session());
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", authRouter);
-app.use('/user',userRouter);
+app.use("/user", userRouter);
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));

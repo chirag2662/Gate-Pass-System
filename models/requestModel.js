@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const RequestSchema = new mongoose.Schema({
   serialNo: {
     type: Number,
-    required: true,
+    // required: true,
   },
   Date: {
     type: Date,
-    required: true,
+    // required: true,
   },
   modeOfTravel: {
     type: String,
@@ -15,13 +15,15 @@ const RequestSchema = new mongoose.Schema({
   },
   reason: {
     type: String,
-    required: true,
+    // required: true,
   },
-  bookedby: [{ type: Schema.Types.ObjectId, ref: "user" }],
+  bookedby: [{ type: mongoose.Schema.ObjectId, ref: "user" }],
   status: {
     type: String,
     default: "pending",
+    enum: ["pending", "rejected", "confirmed"],
   },
 });
 
-module.exports = mongoose.model("request", RequestSchema);
+const Request = mongoose.model("request", RequestSchema);
+module.exports = Request;
