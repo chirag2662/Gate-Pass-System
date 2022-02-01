@@ -11,6 +11,12 @@ const connectDB = require("./config/db");
 
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
+const requestRouter = require("./routes/requestRoutes");
+
+process.on("uncaughtException", (err) => {
+  console.log(err.name, err.message);
+  process.exit(1);
+});
 
 dotenv.config({ path: "./config.env" });
 
@@ -50,6 +56,17 @@ const PORT = process.env.PORT || 3000;
 // app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", authRouter);
+app.use("/error", (req, res, next) => res.render);
 app.use("/user", userRouter);
+app.use("/request", requestRouter);
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));
+
+process.on("unhandledRejection", (err) => {
+  // unhandled promise rejection
+  console.log("UNHANDLED REJECTION");
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});

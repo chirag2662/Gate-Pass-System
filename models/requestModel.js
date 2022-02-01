@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const RequestSchema = new mongoose.Schema({
-  serialNo: {
-    type: Number,
-    // required: true,
-  },
+  // serialNo: {
+  //   type: Number,
+  //   // required: true,
+  // },
   Date: {
     type: Date,
-    // required: true,
+    required: true,
   },
   modeOfTravel: {
     type: String,
@@ -15,7 +15,7 @@ const RequestSchema = new mongoose.Schema({
   },
   reason: {
     type: String,
-    // required: true,
+    required: true,
   },
   bookedby: [{ type: mongoose.Schema.ObjectId, ref: "user" }],
   status: {

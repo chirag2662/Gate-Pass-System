@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
     <!--  All snippets are MIT license http://bootdey.com/license -->
-    <title>user profile bio graph and total sales - Bootdey.com</title>
+    <title>Gate Pass | Request </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
@@ -31,10 +31,11 @@
                     </div>
 
                     <ul class="nav nav-pills nav-stacked">
-                        <li class="active"><a href="/user/profile-page"> <i class="fa fa-user"></i> Profile</a></li>
+                        <li><a href="/user/profile-page"> <i class="fa fa-user"></i> Profile</a></li>
                         <li><a href="/user/update-form"> <i class="fa fa-edit"></i> Edit profile</a></li>
-                        <li><a href="/user/request-form"> <i class="fa fa-edit"></i> New Request</a></li>
-                        <li><a href="/user/deleteMe"> <i class="fa fa-edit"></i> Delete Account</a></li>
+                        <li class="active"><a href="/request/request-form"> <i class="fa fa-edit"></i> New Request</a>
+                        </li>
+                        <!-- <li><a href="/user/deleteMe"> <i class="fa fa-edit"></i> Delete Account</a></li> -->
                     </ul>
                 </div>
             </div>
@@ -47,17 +48,15 @@
                 </div>
                 <div>
                     <div class="row">
-                        <form action="/user/updateMe" method="POST">
-                            <label for="rollNo">Roll Number:</label><br>
-                            <input type="text" id="rollNo" name="rollNo" value=<%=user.rollNo%>><br>
-                            <label for=" roomNo">Room Number:</label><br>
-                            <input type="text" id="roomNo" name="roomNo" value=<%=user.roomNo%>><br>
-                            <label for=" branch">Branch:</label><br>
-                            <input type="text" id="branch" name="branch" value=<%=user.branch%>><br>
-                            <label for=" hostel">Hostel:</label><br>
-                            <input type="text" id="hostel" name="hostel" value=<%=user.hostel%>><br>
-                            <label for=" phoneNo">Phone Number:</label><br>
-                            <input type="number" id="phoneNo" name="phoneNo" value=<%=user.phoneNo%>><br>
+                        <form action="/request/new-request" method="POST">
+
+                            <label for="Date">Date: </label><br>
+                            <input type="datetime-local" id="Date" name="Date"><br>
+                            <label for="modeOfTravel">Mode Of Travel: </label><br>
+                            <input type="text" id="modeOfTravel" name="modeOfTravel"><br>
+                            <label for=" reason">Reason:</label><br>
+                            <input type="text" id="reason" name="reason"><br>
+
                             <br><br>
                             <input type="submit" value="Submit">
                         </form>

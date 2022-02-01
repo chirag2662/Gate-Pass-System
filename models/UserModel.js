@@ -4,14 +4,14 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   mailId: {
     type: String,
-    required: true,
+    // required: true,
   },
   name: {
     type: String,
-    required: true,
+    // required: true,
   },
   image: {
-    type: String,
+    // type: String,
   },
   rollNo: {
     type: String,

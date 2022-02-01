@@ -1,8 +1,8 @@
 const User = require("./../models/UserModel");
 const Request = require("./../models/requestModel");
+
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const { request } = require("express");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -22,53 +22,47 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "hostel",
     "branch"
   );
-
-  // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
     new: true,
     runValidators: true,
   });
 
-  res.status(200).render("userProfile", { user: updatedUser });
+  if (!updatedUser) {
+    return next(new AppError("No doc found with that id", 404));
+  }
+
+  res.redirect("/user/profile-page");
 });
 
-exports.getUpdatePage = async (req, res) => {
-  res.render("updateForm", { user: req.user });
-};
-
-exports.updateMe = catchAsync(async (req, res, next) => {
-  // Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(
-    req.body,
-    "rollNo",
-    "phoneNo",
-    "roomNo",
-    "hostel",
-    "branch"
-  );
-
-  // 3) Update user document
-  const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
-
-  res.status(200).render("userProfile", { user: updatedUser });
+exports.getUpdateForm = catchAsync(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    return next(new AppError("No doc found with that id", 404));
+  }
+  res.status(200).render("updateForm", { user });
 });
 
-exports.getRequestPage = async (req, res) => {
-  res.render("requestForm", { user: req.user });
-};
+exports.getUser = catchAsync(async (req, res) => {
+  if (!req.user.hostel || !req.user.roomNo)
+    return res.redirect("/user/update-form");
 
-exports.getUser = async (req, res) => {
   const user = await User.findById(req.user._id).populate("requests");
-  console.log("user", user);
-  res.render("userProfile", { user });
-};
+  if (!user) {
+    return next(new AppError("No doc found with that id", 404));
+  }
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route is not yet defined!",
+  res.status(200).render("userProfile", { user });
+});
+
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const doc = await User.findByIdAndDelete(req.params.id);
+
+  if (!doc) {
+    return next(new AppError("No document found with that ID", 404));
+  }
+
+  res.status(204).json({
+    status: "success",
+    data: null,
   });
-};
+});
