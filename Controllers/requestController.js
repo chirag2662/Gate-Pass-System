@@ -25,7 +25,6 @@ exports.getRequestForm = catchAsync(async (req, res) => {
   if (!user) {
     return next(new AppError("No doc found with that id", 404));
   }
-  console.log("user", user);
   res.status(200).render("requestForm", { user: user });
 });
 
