@@ -51,6 +51,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+  if (!req.user) return next();
+  if (req.user.mailId === "20cs01029@iitbbs.ac.in") req.session.isAdmin = true;
+  else req.session.isAdmin = false;
+  next();
+});
+
 const PORT = process.env.PORT || 3000;
 
 // app.use(express.static(path.join(__dirname, "public")));
