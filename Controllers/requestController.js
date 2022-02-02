@@ -11,7 +11,7 @@ exports.createRequest = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(req.user._id, {
     $push: { requests: request._id },
   }).populate("requests");
-
+  //Send mail to the user that it request is in process 
   if (!user) {
     return next(new AppError("No doc found with that id", 404));
   }

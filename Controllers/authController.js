@@ -33,5 +33,4 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
     return next(new AppError("No doc found with that id", 404));
   }
   res.redirect("/request/admin");
-
 });
