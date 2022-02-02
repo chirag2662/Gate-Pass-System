@@ -17,7 +17,7 @@ const RequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  bookedby: [{ type: mongoose.Schema.ObjectId, ref: "user" }],
+  bookedby: { type: mongoose.Schema.ObjectId, ref: "user" },
   status: {
     type: String,
     default: "pending",

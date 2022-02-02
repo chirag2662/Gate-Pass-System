@@ -1,45 +1,37 @@
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const mongoose = require("mongoose");
-const User = require("../models/User");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
 
-module.exports = (passport) => {
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/login/google",
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        const newUser = new User({
-          googleId: profile.id,
-          displayName: profile.displayName,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
-          image: profile.photos[0].value,
-        });
+const requestModel = require("./../models/requestModel");
 
-        try {
-          let user = await User.findOne({ googleId: profile.id });
-          if (user) done(null, user);
-          else {
-            await newUser.save();
-            done(null, newUser);
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    )
-  );
+exports.getAllRequestForAdmin = catchAsync(async (req, res, next) => {
+  const requests = await requestModel
+    .find({ status: "pending" })
+    .populate("bookedby")
+    .exec();
+  if (!requests) {
+    return next(new AppError("No doc found with that id", 404));
+  }
+  res.render("gaurd", { requests: requests });
+});
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
+exports.updateRequestStatus = catchAsync(async (req, res, next) => {
+  const requestId = req.params.requestId;
+  const status = req.params.status;
 
-  passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-      done(err, user);
-    });
-  });
-};
+  if (status == "rejected") {
+    await requestModel.findByIdAndDelete(requestId); //Send the mail to user that your request is rejected
+    return;
+  }
+  const request = await requestModel
+    .findById(requestId)
+    .populate("bookedby")
+    .exec();
+  request.status = "confirmed";
+  //send a mail to user that request is confirmed
+  await request.save();
+  if (!request) {
+    return next(new AppError("No doc found with that id", 404));
+  }
+  res.redirect("/request/admin");
+
+});
