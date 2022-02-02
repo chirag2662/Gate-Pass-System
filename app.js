@@ -52,4 +52,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", authRouter);
 app.use("/user", userRouter);
 
+
+
 app.listen(PORT, console.log(`Server running at ${PORT}`));
