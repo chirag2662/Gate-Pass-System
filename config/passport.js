@@ -6,8 +6,7 @@ module.exports = (passport) => {
   passport.use(
     new GoogleStrategy(
       {
-        clientID:
-        process.env.CLIENT_ID,
+        clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_PASSWORD,
         callbackURL: "/login/google",
       },
@@ -15,8 +14,8 @@ module.exports = (passport) => {
         const newUser = new User({
           mailId: profile.emails[0].value,
           name: profile.displayName,
-          // firstName:profile.name.givenName,
-          // lastName:profile.name.familyName,
+          // firstName: profile.name.givenName,
+          // lastName: profile.name.familyName,
           image: profile.photos[0].value,
         });
 

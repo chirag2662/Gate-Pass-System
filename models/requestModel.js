@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const RequestSchema = new mongoose.Schema({
-  serialNo: {
-    type: Number,
-    required: true,
-  },
+  // serialNo: {
+  //   type: Number,
+  //   // required: true,
+  // },
   Date: {
     type: Date,
     required: true,
@@ -17,11 +17,13 @@ const RequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  bookedby: [{ type: Schema.Types.ObjectId, ref: "user" }],
+  bookedby: [{ type: mongoose.Schema.ObjectId, ref: "user" }],
   status: {
     type: String,
     default: "pending",
+    enum: ["pending", "rejected", "confirmed"],
   },
 });
 
-module.exports = mongoose.model("request", RequestSchema);
+const Request = mongoose.model("request", RequestSchema);
+module.exports = Request;
