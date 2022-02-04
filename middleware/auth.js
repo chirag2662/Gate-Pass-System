@@ -7,4 +7,12 @@ module.exports = {
     if (req.isAuthenticated()) res.redirect("/profile-page");
     else return next();
   },
+  isAdmin: (req, res, next) => {
+    if (req.session.isAdmin) return next();
+    else res.redirect("/");
+  },
+  notAdmin: (req, res, next) => {
+    if (req.session.isAdmin) res.redirect("/request/admin");
+    else return next();
+  },
 };

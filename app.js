@@ -11,6 +11,12 @@ const connectDB = require("./config/db");
 
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
+const requestRouter = require("./routes/requestRoutes");
+
+process.on("uncaughtException", (err) => {
+  console.log(err.name, err.message);
+  process.exit(1);
+});
 
 dotenv.config();
 
@@ -45,11 +51,29 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+  if (!req.user) return next();
+  if (req.user.mailId === "20cs01029@iitbbs.ac.in") req.session.isAdmin = true;
+  else req.session.isAdmin = false;
+  next();
+});
+
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", authRouter);
+app.use("/error", (req, res, next) => res.render);
 app.use("/user", userRouter);
+app.use("/request", requestRouter);
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));
+
+process.on("unhandledRejection", (err) => {
+  // unhandled promise rejection
+  console.log("UNHANDLED REJECTION");
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
