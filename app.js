@@ -53,7 +53,7 @@ app.use(passport.session());
 
 app.use((req, res, next) => {
   if (!req.user) return next();
-  if (req.user.mailId === "20cs01029@iitbbs.ac.in") req.session.isAdmin = true;
+  if (req.user.mailId === "20ce02009@iitbbs.ac.in") req.session.isAdmin = true;
   else req.session.isAdmin = false;
   next();
 });
