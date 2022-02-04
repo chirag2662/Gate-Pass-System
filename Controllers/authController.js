@@ -20,7 +20,7 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
 
   if (status == "rejected") {
     await requestModel.findByIdAndDelete(requestId); //Send the mail to user that your request is rejected
-    return;
+    return res.redirect("/request/admin");
   }
   const request = await requestModel
     .findById(requestId)
