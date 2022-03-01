@@ -53,7 +53,8 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
     res.status(200).send('Request is rejected');
   }
 
-  request.status = "confirmed";
+  else {
+    request.status = "confirmed";
   //send a mail to user that request is confirmed
   var mailOptions = {
     from: process.env.NODEMAILER_ID,
@@ -70,4 +71,5 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
 
   await request.save();
   res.status(200).send('Request is Confirmed');
+  }
 });
