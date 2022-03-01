@@ -12,7 +12,7 @@ exports.getAllRequestForAdmin = catchAsync(async (req, res, next) => {
   if (!requests) {
     return next(new AppError("No doc found with that id", 404));
   }
-  res.render("gaurd", { requests: requests });
+  res.status(200).json(requests);
 });
 
 exports.updateRequestStatus = catchAsync(async (req, res, next) => {
@@ -50,7 +50,7 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
         console.log(error);
       } else console.log("Mail send successfully");
     });
-    return res.redirect("/request/admin");
+    res.status(200).send('Request is rejected');
   }
 
   request.status = "confirmed";
@@ -69,5 +69,5 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
   });
 
   await request.save();
-  res.redirect("/request/admin");
+  res.status(200).send('Request is Confirmed');
 });

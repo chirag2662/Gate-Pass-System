@@ -39,7 +39,7 @@ exports.createRequest = catchAsync(async (req, res, next) => {
     return next(new AppError("No doc found with that id", 404));
   }
 
-  res.redirect("/user/profile-page");
+  res.status(200).json(request);
 });
 
 exports.getRequestForm = catchAsync(async (req, res) => {
@@ -48,7 +48,7 @@ exports.getRequestForm = catchAsync(async (req, res) => {
   if (!user) {
     return next(new AppError("No doc found with that id", 404));
   }
-  res.status(200).render("requestForm", { user: user });
+  res.status(200).json(user);
 });
 
 exports.deleteRequest = catchAsync(async (req, res) => {
@@ -56,5 +56,5 @@ exports.deleteRequest = catchAsync(async (req, res) => {
   if (!request) {
     return next(new AppError("No doc found with that id", 404));
   }
-  res.json({ redirect: "/user/profile-page" });
+  res.status.send("Request deleted")
 });
