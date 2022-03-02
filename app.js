@@ -12,6 +12,7 @@ const connectDB = require("./config/db");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const requestRouter = require("./routes/requestRoutes");
+const globalErrorHandler = require("./controllers/errorController");
 
 process.on("uncaughtException", (err) => {
   console.log(err.name, err.message);
@@ -65,6 +66,12 @@ app.use("/", authRouter);
 app.use("/error", (req, res, next) => res.render);
 app.use("/user", userRouter);
 app.use("/request", requestRouter);
+
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+}); //if cant find url
+
+app.use(globalErrorHandler);
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));
 

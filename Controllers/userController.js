@@ -31,7 +31,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     return next(new AppError("No doc found with that id", 404));
   }
 
-  res.redirect("/user/profile-page");
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: updatedUser,
+    },
+  });
 });
 
 exports.getUpdateForm = catchAsync(async (req, res) => {
@@ -39,7 +44,12 @@ exports.getUpdateForm = catchAsync(async (req, res) => {
   if (!user) {
     return next(new AppError("No doc found with that id", 404));
   }
-  res.status(200).render("updateForm", { user });
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: user,
+    },
+  });
 });
 
 exports.getUser = catchAsync(async (req, res) => {
@@ -51,7 +61,12 @@ exports.getUser = catchAsync(async (req, res) => {
     return next(new AppError("No doc found with that id", 404));
   }
 
-  res.status(200).render("userProfile", { user });
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: updatedUser,
+    },
+  });
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {

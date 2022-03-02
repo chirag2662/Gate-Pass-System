@@ -19,7 +19,7 @@ const handleValidationErrorDB = (err) => {
 
 const sendErrorDev = (err, req, res) => {
   console.error("ERROR", err);
-  return res.status(err.statusCode).render("error", {
+  return res.status(err.statusCode).json({
     title: "Something went wrong",
     message: err.message,
   });
@@ -27,7 +27,7 @@ const sendErrorDev = (err, req, res) => {
 
 const sendErrorProd = (err, req, res) => {
   if (err.isOperational) {
-    return res.status(err.statusCode).render("error", {
+    return res.status(err.statusCode).json({
       title: "Something went wrong",
       message: err.message,
     });
@@ -35,7 +35,7 @@ const sendErrorProd = (err, req, res) => {
 
   console.error("ERROR", err);
 
-  return res.status(err.statusCode).render("error", {
+  return res.status(err.statusCode).json({
     title: "Something went wrong",
     message: "Please try again later.",
   });
