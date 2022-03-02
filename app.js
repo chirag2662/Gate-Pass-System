@@ -8,11 +8,12 @@ const passport = require("passport");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
+const AppError = require("./utils/appError");
 
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const requestRouter = require("./routes/requestRoutes");
-const globalErrorHandler = require("./controllers/errorController");
+const globalErrorHandler = require("./Controllers/errorController");
 
 process.on("uncaughtException", (err) => {
   console.log(err.name, err.message);
@@ -31,13 +32,17 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "views"));
+
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
+app.use(bodyParser.json());
 
-//Session
+// Session;
 app.use(
   session({
     secret: "gate-pass-system",
@@ -47,7 +52,7 @@ app.use(
   })
 );
 
-//Passwort Middleware
+// Passwort Middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -60,18 +65,18 @@ app.use((req, res, next) => {
 
 const PORT = process.env.PORT || 9000;
 
-// app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", authRouter);
 app.use("/error", (req, res, next) => res.render);
 app.use("/user", userRouter);
 app.use("/request", requestRouter);
 
-app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-}); //if cant find url
-
 app.use(globalErrorHandler);
+
+app.all("*", (req, res, next) => {
+  next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404));
+}); //if cant find url
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));
 
