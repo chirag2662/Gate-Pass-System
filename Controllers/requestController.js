@@ -56,5 +56,5 @@ exports.deleteRequest = catchAsync(async (req, res) => {
   if (!request) {
     return next(new AppError("No doc found with that id", 404));
   }
-  res.status.send("Request deleted")
+  res.status.send("Request deleted");
 });

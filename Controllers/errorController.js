@@ -17,45 +17,40 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-const sendErrorDev = (err, req, res) => {
-  console.error("ERROR", err);
-  return res.status(err.statusCode).render("error", {
-    title: "Something went wrong",
-    message: err.message,
-  });
-};
+// const sendErrorDev = (err, req, res) => {
+//   console.error("ERROR->->", err);
+//   return res.status(err.statusCode).json({
+//     title: "Something went wrong",
+//     message: err.message,
+//   });
+// };
 
 const sendErrorProd = (err, req, res) => {
   if (err.isOperational) {
-    return res.status(err.statusCode).render("error", {
+    return res.status(err.statusCode).json({
       title: "Something went wrong",
       message: err.message,
     });
   }
 
-  console.error("ERROR", err);
+  // console.error("ERROR", err);
 
-  return res.status(err.statusCode).render("error", {
+  return res.status(err.statusCode).json({
     title: "Something went wrong",
     message: "Please try again later.",
   });
 };
 
 module.exports = (err, req, res, next) => {
+  console.log("Hi");
   err.statusCode = err.statusCode || 500; //internal server error
   err.status = err.status || "error"; // status -> fail
-  if (process.env.NODE_ENV === "development") {
-    sendErrorDev(err, req, res);
-  } else if (process.env.NODE_ENV === "production") {
-    let error = { ...err };
-    error.message = err.message;
 
-    if (error.name === "CastError") {
-      error = handleCastErrorDB(error);
-    }
-    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (error._message === "Validation failed")
-      error = handleValidationErrorDB(error);
-    sendErrorProd(error, req, res);
+  if (err.name === "CastError") {
+    err = handleCastErrorDB(err);
   }
+  if (err.code === 11000) err = handleDuplicateFieldsDB(err);
+  if (err._message === "Validation failed") err = handleValidationErrorDB(err);
+  sendErrorProd(err, req, res);
+  // }
 };
