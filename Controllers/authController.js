@@ -3,6 +3,8 @@ const AppError = require("./../utils/appError");
 const nodemailer = require("nodemailer");
 
 const requestModel = require("./../models/requestModel");
+const QRCode = require('qrcode')
+
 
 exports.getAllRequestForAdmin = catchAsync(async (req, res, next) => {
   const requests = await requestModel
@@ -27,6 +29,18 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
   if (!request) {
     return next(new AppError("No doc found with that id", 404));
   }
+// qr code generation
+let date =request.Date.getDate()+"/"+(request.Date.getMonth()+1)+"/"+request.Date.getFullYear();
+
+let data ="Date of leaving :"+ date+"\n Email: "+request.bookedby.mailId+"\n Student Name :"+request.bookedby.name+"\nRoom No:"+request.bookedby.roomNo+" "+request.bookedby.hostel+"\nGate pass request Confirmed" ;
+QRCode.toFile('./public/myqr.png', data, {
+}, function (err) {
+  if (err) throw err
+  console.log('done')
+})
+// qr code generation end
+
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -34,13 +48,13 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
       pass: process.env.NODEMAILER_PASSWORD,
     },
   });
-
   if (status == "rejected") {
     await requestModel.findByIdAndDelete(requestId);
 
     var mailOptions = {
       from: process.env.NODEMAILER_ID,
       to: request.bookedby.mailId,
+
       subject: "GATE-PASS Request",
       text: `${request.bookedby.name} your Gate Pass request is rejected`,
     };
@@ -60,6 +74,11 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
     to: request.bookedby.mailId,
     subject: "GATE-PASS Request",
     text: `${request.bookedby.name} your Gate Pass request is ${request.status}`,
+    attachments: [{
+         filename: 'qr.png',
+         path: './public/myqr.png',
+         cid: 'unique@cid'
+     }]
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
