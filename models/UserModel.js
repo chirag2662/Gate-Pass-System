@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   mailId: {
     type: String,
-    // required: true,
+    required: true,
   },
   name: {
     type: String,
-    // required: true,
+    required: true,
   },
   image: {
     type: String,
@@ -32,6 +32,10 @@ const UserSchema = new Schema({
   hostel: {
     type: String,
     // required: true,
+  },
+  requestsPerMonth: {
+    type: Number,
+    default: 0,
   },
   requests: [{ type: mongoose.Schema.ObjectId, ref: "request" }],
 });
