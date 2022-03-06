@@ -67,10 +67,10 @@ const PORT = process.env.PORT || 9000;
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", authRouter);
-app.use("/error", (req, res, next) => res.render);
-app.use("/user", userRouter);
-app.use("/request", requestRouter);
+app.use("/api/v1/", authRouter);
+app.use("/api/v1/error", (req, res, next) => res.render);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/request", requestRouter);
 
 app.use(globalErrorHandler);
 

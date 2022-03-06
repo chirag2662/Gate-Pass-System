@@ -16,7 +16,7 @@ import GateLogo from "../assets/Logo.png";
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
-  const oAuthUrl = "http://localhost:8000/api/v1/auth/google/redirect/";
+  const oAuthUrl = "http://localhost:9000/api/v1/auth/google";
   const googleHandler = async () => {
     console.error("Login");
   };
