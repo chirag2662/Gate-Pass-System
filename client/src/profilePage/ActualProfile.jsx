@@ -11,7 +11,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const getUser = async () => {
-      const response = await axiosInstance(
+      const response = await axiosInstance.get(
         "http://localhost:9000/api/v1/user/profile-page"
       );
       const { name, image, phoneNo, rollNo, branch, requests } =
