@@ -53,8 +53,8 @@ exports.getUpdateForm = catchAsync(async (req, res) => {
 });
 
 exports.getUser = catchAsync(async (req, res) => {
-  if (!req.user.hostel || !req.user.roomNo)
-    return res.redirect("/user/update-form");
+  // if (!req.user.hostel || !req.user.roomNo)
+  //   return res.redirect("/user/update-form");
 
   const user = await User.findById(req.user._id).populate("requests");
   if (!user) {

@@ -9,6 +9,8 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
 const AppError = require("./utils/appError");
+const cookieParser = require("cookie-parser");
+const cors=require('cors')
 
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -32,23 +34,43 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+
+app.use(function (req, res, next) {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "http://localhost:3000"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
+
 // app.set("view engine", "ejs");
 // app.set("views", path.join(__dirname, "views"));
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
-app.use(bodyParser.json());
-
 // Session;
+app.use(cookieParser("secretsssss"));
 app.use(
   session({
-    secret: "gate-pass-system",
+    secret: "secretsssss",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URL,
+    }),
+    cookie: {
+      maxAge: 60 * 60 * 1000,
+      secure: false,
+    },
   })
 );
 
@@ -58,7 +80,7 @@ app.use(passport.session());
 
 app.use((req, res, next) => {
   if (!req.user) return next();
-  if (req.user.mailId === "20cs01029@iitbbs.ac.in") req.session.isAdmin = true;
+  if (req.user.mailId === "20cs010@iitbbs.ac.in") req.session.isAdmin = true;
   else req.session.isAdmin = false;
   next();
 });

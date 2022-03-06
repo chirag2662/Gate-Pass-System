@@ -29,10 +29,8 @@ export default function ProfilePage(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const name = props.name;
-  const rollNumber = props.rollNumber;
-  const phoneNumber = props.phoneNumber;
-  const branch = props.Branch;
+  const { name, rollNumber, phoneNumber, branch, image, requests } = props;
+
   return (
     <Grid container>
       <Grid item xs={12} sm={6}>
@@ -63,6 +61,7 @@ export default function ProfilePage(props) {
                   height: "100px",
                   fontSize: "60px",
                 }}
+                src={image}
               >
                 P
               </Avatar>
@@ -84,7 +83,7 @@ export default function ProfilePage(props) {
                     Name
                   </Typography>
                 }
-                defaultValue={name}
+                value={name}
                 fullWidth="true"
                 inputProps={{
                   style: {
@@ -260,10 +259,14 @@ export default function ProfilePage(props) {
           </CardContent>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <Grid container>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((elem) => {
+              {requests.map((elem) => {
                 return (
                   <Grid item xs={12} sm={12} md={6} style={{}}>
-                    <Requests date="ok" reason="ok" status="no" />
+                    <Requests
+                      date={elem.Date}
+                      reason={elem.reason}
+                      status={elem.status}
+                    />
                   </Grid>
                 );
               })}{" "}

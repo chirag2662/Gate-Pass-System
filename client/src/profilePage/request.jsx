@@ -13,6 +13,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import { Grid, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import { yellow } from "@mui/material/colors";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -30,16 +33,22 @@ export default function request(props) {
   const Status = props.status;
   return (
     <Card variant="outlined" style={{ margin: "10px" }}>
+      {Status && Status === "confirmed" ? (
+        <CheckCircleIcon color="success" />
+      ) : (
+        <PendingActionsIcon sx={{ color: yellow[500] }} />
+      )}
       <CardHeader
         style={{ marginTop: "10px" }}
         title={
           <TextField
             id="outlined-helperText"
+            disabled="disabled"
             label={
               <Typography
                 variant="h6a"
                 style={{
-                  marginRight: "-1px",
+                  marginRight: "4px",
                   marginLeft: "1.5px",
                 }}
               >
@@ -74,6 +83,7 @@ export default function request(props) {
             label={<div style={{ marginRight: "12px" }}>Reason</div>}
             defaultValue={Reason}
             fullWidth="true"
+            disabled="disabled"
             InputLabelProps={{
               style: {
                 fontSize: 18,
@@ -104,11 +114,12 @@ export default function request(props) {
         title={
           <TextField
             id="outlined-helperText"
+            disabled="disabled"
             label={
               <Typography
                 variant="h6a"
                 style={{
-                  marginRight: "-1px",
+                  marginRight: "6px",
                   marginLeft: "1.5px",
                 }}
               >

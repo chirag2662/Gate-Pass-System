@@ -1,12 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../util/axiosIntance";
 import ProfilePageCard from "./Card";
 export default function ProfilePage() {
+  const [name, setName] = useState("");
+  const [branch, setBranch] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const [rollNo, setRollNo] = useState("");
+  const [image, setImage] = useState("");
+  const [request, setRequest] = useState([]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const response = await axiosInstance(
+        "http://localhost:9000/api/v1/user/profile-page"
+      );
+      const { name, image, phoneNo, rollNo, branch, requests } =
+        response.data.data.user;
+      setName(name);
+      setImage(image);
+      setPhoneNo(phoneNo);
+      setRollNo(rollNo);
+      setBranch(branch);
+      setRequest(requests);
+      console.log(requests);
+    };
+    getUser();
+  }, []);
+
   return (
     <ProfilePageCard
-      name="Prateek Kumar Singh"
-      Branch="CSE"
-      phoneNumber="8851595987"
-      rollNumber="20CS01003"
+      name={name}
+      Branch={branch}
+      phoneNumber={phoneNo}
+      rollNumber={rollNo}
+      image={image}
+      requests={request}
     />
   );
 }
