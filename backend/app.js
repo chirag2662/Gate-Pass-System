@@ -87,7 +87,7 @@ app.use((req, res, next) => {
 
 const PORT = process.env.PORT || 9000;
 
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/v1/", authRouter);
 app.use("/api/v1/error", (req, res, next) => res.render);

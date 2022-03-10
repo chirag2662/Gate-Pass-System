@@ -17,19 +17,22 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CoPresentIcon from '@mui/icons-material/CoPresent';
 import EditIcon from "@mui/icons-material/Edit";
 import GateLogo from "../assets/Logo.png";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import {useNavigate} from "react-router-dom"
 export default function ButtonAppBar() {
-  const { height, width } = WindowDimension();
+  const {height, width} = WindowDimension();
   const [sideBar, setSideBar] = React.useState(false);
+  const navigate = useNavigate()
   function handleClick(e) {
     console.log(e);
     setSideBar(!sideBar);
   }
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
+      sx={{width: anchor === "top" || anchor === "bottom" ? "auto" : 250}}
       role="presentation"
       onClick={handleClick}
       onKeyDown={handleClick}
@@ -46,14 +49,18 @@ export default function ButtonAppBar() {
             }}
           />
         </ListItem>
-        {["Profile", "Edit Profile", "New Request"].map((text, index) => (
-          <ListItem button key={text}>
+        {["Profile", "New Request", "All Requests"].map((text, index) => (
+          <ListItem button key={text} onClick={() => {
+            if (text === "Profile") navigate("/user/profile-page")
+            else if (text === "New Request") navigate("/user/Input")
+            else if (text === "All Requests") navigate("/Admin/requests")
+          }} >
             <ListItemIcon>
               {index == 0 ? <AccountCircleIcon /> : <></>}
               {index == 1 ? <EditIcon /> : <></>}
-              {index == 2 ? <AddCircleOutlineIcon /> : <></>}
+              {index == 2 ? <CoPresentIcon /> : <></>}
             </ListItemIcon>
-            <ListItemText style={{ marginLeft: "-10px" }}>
+            <ListItemText style={{marginLeft: "-10px"}}>
               <Typography variant="HeadingList">{text}</Typography>
             </ListItemText>
           </ListItem>
@@ -64,15 +71,15 @@ export default function ButtonAppBar() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" style={{ backgroundColor: "" }}>
+    <Box sx={{flexGrow: 1}}>
+      <AppBar position="static" style={{backgroundColor: ""}}>
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{mr: 2}}
             onClick={handleClick}
           >
             <MenuIcon />
@@ -90,7 +97,7 @@ export default function ButtonAppBar() {
           >
             Welcome to Gate Pass System
           </Typography>
-          <Button color="inherit" variant="outlined">
+          <Button color="inherit" variant="outlined" href="http://localhost:9000/api/v1/logout">
             <LogoutIcon />
             {width <= 414 ? `` : `Logout`}
           </Button>

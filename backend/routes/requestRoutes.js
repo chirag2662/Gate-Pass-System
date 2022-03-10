@@ -18,7 +18,7 @@ router.post(
   notAdmin,
   requestController.createRequest
 );
-router.delete(
+router.get(
   "/delete-request/:id",
   ensureAuth,
   requestController.deleteRequest

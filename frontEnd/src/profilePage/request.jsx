@@ -7,15 +7,17 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import { Button, Typography } from "@mui/material";
+import { bottomNavigationClasses, Button, Typography } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import EditIcon from "@mui/icons-material/Edit";
 import { Grid, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import { yellow } from "@mui/material/colors";
+import axiosInstance from "../util/axiosIntance";
+import { useNavigate } from "react-router";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -27,10 +29,18 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function request(props) {
+function request(props) {
   const date = props.date;
   const Reason = props.reason;
   const Status = props.status;
+  const requestId = props.id;
+  const deleteRequestHandler = async () => {
+    props.onDelete(requestId);
+    const response = await axiosInstance.get(
+      `http://localhost:9000/api/v1/request/delete-request/${requestId}`
+    );
+    // navigate('/user/profile-page');
+  };
   return (
     <Card variant="outlined" style={{ margin: "10px" }}>
       {Status && Status === "confirmed" ? (
@@ -79,11 +89,11 @@ export default function request(props) {
         style={{ marginTop: "-20px" }}
         title={
           <TextField
+            disabled="disabled"
             id="outlined-basic"
             label={<div style={{ marginRight: "12px" }}>Reason</div>}
             defaultValue={Reason}
             fullWidth="true"
-            disabled="disabled"
             InputLabelProps={{
               style: {
                 fontSize: 18,
@@ -119,14 +129,14 @@ export default function request(props) {
               <Typography
                 variant="h6a"
                 style={{
-                  marginRight: "6px",
+                  marginRight: "4px",
                   marginLeft: "1.5px",
                 }}
               >
                 Status
               </Typography>
             }
-            defaultValue={Status}
+            value={Status}
             fullWidth="true"
             inputProps={{
               style: {
@@ -145,6 +155,26 @@ export default function request(props) {
           />
         }
       />
+      <div
+        style={{
+          display: "flex",
+          justifyItems: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          paddingBottom: "20px",
+        }}
+      >
+        <Button
+          color="error"
+          variant="outlined"
+          style={{ paddingBottom: "" }}
+          onClick={deleteRequestHandler}
+        >
+          Delete Pass Request
+        </Button>
+      </div>
     </Card>
   );
 }
+
+export default request;

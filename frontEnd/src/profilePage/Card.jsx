@@ -14,6 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Grid, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Requests from "./request";
+import { useState } from "react";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -29,8 +30,15 @@ export default function ProfilePage(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  // const name = props.name;
+  // const rollNumber = props.rollNumber;
+  // const phoneNumber = props.phoneNumber;
+  // const branch = props.Branch;
   const { name, rollNumber, phoneNumber, branch, image, requests } = props;
-
+  const [userRequest, setRequest] = useState(requests);
+  const removeRequestHandler = (id) => {
+    setRequest(userRequest.filter((req) => req._id !== id));
+  };
   return (
     <Grid container>
       <Grid item xs={12} sm={6}>
@@ -44,7 +52,7 @@ export default function ProfilePage(props) {
               justifyContent: "center",
               justifyItems: "center",
             }}
-            title={<Typography variant="h1">USER PROFILE</Typography>}
+            title={<Typography variant="h1">YOUR PROFILE</Typography>}
           />
           <Grid
             container
@@ -76,7 +84,7 @@ export default function ProfilePage(props) {
                   <Typography
                     variant="h6a"
                     style={{
-                      marginRight: "-1px",
+                      marginRight: "4px",
                       marginLeft: "1.5px",
                     }}
                   >
@@ -99,11 +107,6 @@ export default function ProfilePage(props) {
                     fontFamily: `'Robot',sans-serif`,
                     fontWeight: 700,
                   },
-                  endAdornment: (
-                    <Button variant="outlined" endIcon={<EditIcon />}>
-                      Edit
-                    </Button>
-                  ),
                 }}
               />
             }
@@ -137,11 +140,6 @@ export default function ProfilePage(props) {
                     fontFamily: `'Robot',sans-serif`,
                     fontWeight: 700,
                   },
-                  endAdornment: (
-                    <Button variant="outlined" endIcon={<EditIcon />}>
-                      Edit
-                    </Button>
-                  ),
                 }}
               />
             }
@@ -177,11 +175,6 @@ export default function ProfilePage(props) {
                     fontFamily: `'Robot',sans-serif`,
                     fontWeight: 700,
                   },
-                  endAdornment: (
-                    <Button variant="outlined" endIcon={<EditIcon />}>
-                      Edit
-                    </Button>
-                  ),
                 }}
               />
             }
@@ -217,15 +210,27 @@ export default function ProfilePage(props) {
                     fontFamily: `'Robot',sans-serif`,
                     fontWeight: 700,
                   },
-                  endAdornment: (
-                    <Button variant="outlined" endIcon={<EditIcon />}>
-                      Edit
-                    </Button>
-                  ),
                 }}
               />
             }
           />
+          <div
+            style={{
+              margin: "auto",
+              width: "90%",
+              paddingBottom: "",
+              backgroundColor: "",
+            }}
+          >
+            <Button
+              variant="outlined"
+              fullWidth={true}
+              style={{ marginBottom: "10px" }}
+              endIcon={<EditIcon />}
+            >
+              Edit
+            </Button>
+          </div>
         </Card>
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -239,7 +244,7 @@ export default function ProfilePage(props) {
               justifyContent: "center",
               justifyItems: "center",
             }}
-            title={<Typography variant="h1">USER REQUESTS</Typography>}
+            title={<Typography variant="h1">YOUR REQUESTS</Typography>}
           />
           <CardContent
             style={{
@@ -263,9 +268,11 @@ export default function ProfilePage(props) {
                 return (
                   <Grid item xs={12} sm={12} md={6} style={{}}>
                     <Requests
+                      id={elem._id}
                       date={elem.Date}
                       reason={elem.reason}
                       status={elem.status}
+                      onDelete={removeRequestHandler}
                     />
                   </Grid>
                 );

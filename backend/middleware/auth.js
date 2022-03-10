@@ -12,7 +12,8 @@ module.exports = {
     else res.redirect("/");
   },
   notAdmin: (req, res, next) => {
-    if (req.session.isAdmin) res.redirect("/request/admin");
-    else return next();
+    // if (req.session.isAdmin) res.redirect("/request/admin");
+    // else return next();
+    next();
   },
 };

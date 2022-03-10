@@ -56,7 +56,9 @@ const FirebaseLogin = ({ ...others }) => {
                 justifyItems: "center",
               }}
             >
-              <Typography variant="h5" style={{textAlign:"center"}}>Welcome to Gate Pass System</Typography>
+              <Typography variant="h5" style={{ textAlign: "center" }}>
+                Welcome to Gate Pass System
+              </Typography>
             </ListItem>
             <ListItem
               style={{
@@ -68,7 +70,9 @@ const FirebaseLogin = ({ ...others }) => {
                 justifyItems: "center",
               }}
             >
-              <Typography variant="CredMan">Enter Your Credentianls to Continue</Typography>
+              <Typography variant="CredMan">
+                Enter Your Credentianls to Continue
+              </Typography>
             </ListItem>
             <ListItem>
               <Button
