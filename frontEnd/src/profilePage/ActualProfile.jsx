@@ -32,6 +32,9 @@ export default function ProfilePage() {
         roomNo,
         mailId,
       } = response.data.data.user;
+      if (name && phoneNo && hostel && rollNo && roomNo && branch)
+      localStorage.setItem("requestForm", true);
+      else localStorage.setItem("requestForm", false);
       const { token } = response.data.data;
       authCtx.login({ name, token, mailId });
       setName(name);
@@ -45,6 +48,7 @@ export default function ProfilePage() {
     };
     getUser();
   }, []);
+
   const { user } = authCtx;
   if (!user) return <Navigate to="/" />;
   if (user && user.isAdmin) return <Navigate to="/Admin/requests" />;

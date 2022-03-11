@@ -20,6 +20,7 @@ const generateToken = (newUser, req) => {
       email: newUser.mailId,
       name: newUser.name,
       isAdmin: req.session.isAdmin,
+      requestsPerMonth: newUser.requestsPerMonth,
     },
     process.env.SCERET_KEY,
     { expiresIn: "5h" }

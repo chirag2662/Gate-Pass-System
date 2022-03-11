@@ -17,6 +17,17 @@ exports.createRequest = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(req.user._id, {
     $push: { requests: request._id },
   }).populate("requests");
+  if (
+    user.rollNo &&
+    user.name &&
+    user.phoneNo &&
+    user.hostel &&
+    user.rollNo &&
+    user.roomNo &&
+    user.branch
+  )
+    return next(new AppError("You are not allowed to make a request", 404));
+
   //Send mail to the user that it request is in process
 
   const transporter = nodemailer.createTransport({
