@@ -45,7 +45,6 @@ export default function AdminPage(props) {
       );
       const req = response.data;
       setRequests(req);
-      console.log("requests= ", req);
     };
     getUser();
   }, []);
