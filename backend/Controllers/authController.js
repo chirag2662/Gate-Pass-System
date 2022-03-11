@@ -1,7 +1,7 @@
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const nodemailer = require("nodemailer");
-
+const QRCode = require("qrcode");
 const requestModel = require("./../models/requestModel");
 
 exports.getAllRequestForAdmin = catchAsync(async (req, res, next) => {
@@ -27,6 +27,31 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
   if (!request) {
     return next(new AppError("No doc found with that id", 404));
   }
+
+  let date =
+    request.Date.getDate() +
+    "/" +
+    (request.Date.getMonth() + 1) +
+    "/" +
+    request.Date.getFullYear();
+
+  let data =
+    "Date of leaving :" +
+    date +
+    "\n Email: " +
+    request.bookedby.mailId +
+    "\n Student Name :" +
+    request.bookedby.name +
+    "\nRoom No:" +
+    request.bookedby.roomNo +
+    " " +
+    request.bookedby.hostel +
+    "\nGate pass request Confirmed";
+  QRCode.toFile("./public/myqr.png", data, {}, function (err) {
+    if (err) throw err;
+    console.log("done");
+  });
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -50,26 +75,31 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
         console.log(error);
       } else console.log("Mail send successfully");
     });
-    res.status(200).send('Request is rejected');
-  }
-
-  else {
+    res.status(200).send("Request is rejected");
+  } else {
     request.status = "confirmed";
-  //send a mail to user that request is confirmed
-  var mailOptions = {
-    from: process.env.NODEMAILER_ID,
-    to: request.bookedby.mailId,
-    subject: "GATE-PASS Request",
-    text: `${request.bookedby.name} your Gate Pass request is ${request.status}`,
-  };
+    //send a mail to user that request is confirmed
+    var mailOptions = {
+      from: process.env.NODEMAILER_ID,
+      to: request.bookedby.mailId,
+      subject: "GATE-PASS Request",
+      text: `${request.bookedby.name} your Gate Pass request is ${request.status}`,
+      attachments: [
+        {
+          filename: "qr.png",
+          path: "./public/myqr.png",
+          cid: "unique@cid",
+        },
+      ],
+    };
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else console.log("Mail send successfully");
-  });
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else console.log("Mail send successfully");
+    });
 
-  await request.save();
-  res.status(200).send('Request is Confirmed');
+    await request.save();
+    res.status(200).send("Request is Confirmed");
   }
 });
