@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
+import axiosInstance from "../util/axiosIntance";
 import {
   Box,
   Button,
@@ -13,12 +14,15 @@ import {
 } from "@mui/material";
 import { ReactComponent as Google } from "../assets/GoogleLogo.svg";
 import GateLogo from "../assets/Logo.png";
+import axios from "axios";
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
   const oAuthUrl = "http://localhost:9000/api/v1/auth/google";
-  const googleHandler = async () => {
-    console.error("Login");
+  const googleLoginHandler = async () => {
+    // const response = await axios.get(oAuthUrl);
+    // console.log(response);
+    // console.error("Login");
   };
   return (
     <Grid
@@ -78,10 +82,10 @@ const FirebaseLogin = ({ ...others }) => {
               <Button
                 component="a"
                 href={oAuthUrl}
+                onClick={googleLoginHandler}
                 rel="noreferrer"
                 disableElevation
                 fullWidth
-                onClick={googleHandler}
                 size="large"
                 variant="outlined"
                 sx={{

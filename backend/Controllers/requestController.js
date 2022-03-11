@@ -6,6 +6,11 @@ const User = require("./../models/UserModel");
 const Request = require("./../models/requestModel");
 
 exports.createRequest = catchAsync(async (req, res, next) => {
+  if (req.user.requestsPerMonth >= 2)
+    return next(
+      new AppError("You have already made 2 requests in this month", 404)
+    );
+
   const requestObj = Object.assign(req.body, { bookedby: req.user._id });
   const request = await Request.create(requestObj);
 

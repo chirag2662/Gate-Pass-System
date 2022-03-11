@@ -15,9 +15,12 @@ import AppBar from "../AppBar/appBar.jsx";
 import GarageIcon from "@mui/icons-material/Garage";
 import { DatePicker } from "@mui/lab";
 import axiosInstance from "../util/axiosIntance";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
+import { AuthContext } from "../context/auth.js";
+
 export default function InputForm() {
   const [value, setValue] = React.useState(new Date());
+  const authCtx = React.useContext(AuthContext);
   const navigate = useNavigate();
   const [reason, setReason] = React.useState("");
   const [modeOfTracvel, setModeOfTravel] = React.useState("");
@@ -40,6 +43,11 @@ export default function InputForm() {
     );
     if (ans.status === 200) navigate("/user/profile-page", { replace: true });
   }
+
+  const { user } = authCtx;
+  if (!user) return <Navigate to="/" />;
+  if (user&&user.isAdmin) return <Navigate to="/Admin/requests" />;
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <AppBar />
