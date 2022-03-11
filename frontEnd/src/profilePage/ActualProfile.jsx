@@ -8,13 +8,14 @@ export default function ProfilePage() {
   const [rollNo, setRollNo] = useState("");
   const [image, setImage] = useState("");
   const [request, setRequest] = useState(['1']);
-
+  const [hostel, setHostel] = useState('');
+  const [hostelRoomNumber, setHostelRoomNumber] = useState('')
   useEffect(() => {
     const getUser = async () => {
       const response = await axiosInstance.get(
         "http://localhost:9000/api/v1/user/profile-page"
       );
-      const {name, image, phoneNo, rollNo, branch, requests} =
+      const {name, image, phoneNo, rollNo, branch, requests, hostel, hostelRoomNumber} =
         response.data.data.user;
       setName(name);
       setImage(image);
@@ -22,6 +23,8 @@ export default function ProfilePage() {
       setRollNo(rollNo);
       setBranch(branch);
       setRequest(requests);
+      setHostel(hostel)
+      setHostelRoomNumber(hostelRoomNumber)
     };
     getUser();
   }, []);

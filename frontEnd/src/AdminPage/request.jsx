@@ -2,17 +2,9 @@ import * as React from "react";
 import {styled} from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import {Button, Typography} from "@mui/material";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EditIcon from "@mui/icons-material/Edit";
-import {Grid, TextField} from "@mui/material";
-import {makeStyles} from "@mui/styles";
+import {TextField} from "@mui/material";
 import axiosInstance from "../util/axiosIntance";
 const ExpandMore = styled((props) => {
   const {expand, ...other} = props;
@@ -24,21 +16,29 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+const textFieldColor = "grey"
+const textFieldSX = {
+  input: {
+    "-webkit-text-fill-color": `${textFieldColor} !important`,
+    color: `${textFieldColor} !important`,
+  },
+};
 
 export default function request(props) {
-  const {bookedBy,modeOfTravel,status,reason,Date,_id}=props.request;
-  const changeStatusHandler=async(e)=>{
-    const finalStatus=e.target.value;
-    const response=await axiosInstance.get(`http://localhost:9000/api/v1/request/admin/${_id}/${finalStatus}`);
+  const {bookedBy, modeOfTravel, status, reason, Date, _id} = props.request;
+  const changeStatusHandler = async (e) => {
+    const finalStatus = e.target.value;
+    const response = await axiosInstance.get(`http://localhost:9000/api/v1/request/admin/${_id}/${finalStatus}`);
     props.onDelete(_id);
   }
   return (
-    <Card variant="outlined" style={{margin: "10px"}}>
+    <Card variant="outlined" style={{margin: "10px", ...props.style}}>
       <CardHeader
         style={{marginTop: "10px"}}
         title={
           <TextField
-          disabled="disabled"
+            disabled={true}
+            sx={textFieldSX}
             id="outlined-helperText"
             label={
               <Typography
@@ -51,8 +51,8 @@ export default function request(props) {
                 User's Roll no.
               </Typography>
             }
-            defaultValue={bookedBy&&bookedBy.rollNo}
-            fullWidth="true"
+            defaultValue={bookedBy && bookedBy.rollNo}
+            fullWidth={true}
             inputProps={{
               style: {
                 color: "grey",
@@ -76,7 +76,9 @@ export default function request(props) {
         style={{marginTop: "-20px"}}
         title={
           <TextField
-          disabled="disabled"
+            disabled={true}
+            sx={textFieldSX}
+
             id="outlined-helperText"
             label={
               <Typography
@@ -90,7 +92,8 @@ export default function request(props) {
               </Typography>
             }
             defaultValue={Date}
-            fullWidth="true"
+
+            fullWidth={true}
             inputProps={{
               style: {
                 color: "grey",
@@ -113,11 +116,14 @@ export default function request(props) {
         style={{marginTop: "-20px"}}
         title={
           <TextField
-          disabled="disabled"
+            disabled={true}
+            sx={textFieldSX}
+
             id="outlined-basic"
             label={<div style={{marginRight: "12px"}}>Reason</div>}
             defaultValue={reason}
-            fullWidth="true"
+
+            fullWidth={true}
             InputLabelProps={{
               style: {
                 fontSize: 18,
@@ -147,7 +153,9 @@ export default function request(props) {
         style={{marginTop: "-20px"}}
         title={
           <TextField
-          disabled="disabled"
+
+            disabled={true}
+            sx={textFieldSX}
             id="outlined-helperText"
             label={
               <Typography
@@ -161,7 +169,7 @@ export default function request(props) {
               </Typography>
             }
             defaultValue={status}
-            fullWidth="true"
+            fullWidth={true}
             inputProps={{
               style: {
                 color: "grey",
@@ -180,7 +188,7 @@ export default function request(props) {
         }
       />
       <div style={{display: "flex", justifyItems: "center", justifyContent: "center", alignItems: "center", paddingBottom: "20px"}} >
-        <Button color="success" variant="outlined" style={{paddingBottom: ""}} value="confirmed" onClick={changeStatusHandler}>Accept User's Pass</Button>
+        <Button color="success" variant="outlined" style={{paddingBottom: ""}} value="confirmed" onClick={changeStatusHandler}>Accept Pass Request</Button>
       </div>
 
       <div style={{display: "flex", justifyItems: "center", justifyContent: "center", alignItems: "center", paddingBottom: "20px"}} >

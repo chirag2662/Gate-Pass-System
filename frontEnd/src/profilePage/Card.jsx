@@ -3,17 +3,14 @@ import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import { Button, Typography } from "@mui/material";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
-import { Grid, TextField } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import Requests from "./request";
+import SaveIcon from "@mui/icons-material/Save";
+import { Grid, TextField, ListItem as Item } from "@mui/material";
+import Request from "./request";
 import { useState } from "react";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -34,13 +31,51 @@ export default function ProfilePage(props) {
   // const rollNumber = props.rollNumber;
   // const phoneNumber = props.phoneNumber;
   // const branch = props.Branch;
-  const { name, rollNumber, phoneNumber, branch, image, requests } = props;
+  const {
+    name,
+    rollNumber,
+    phoneNumber,
+    branch,
+    image,
+    requests,
+    hostel,
+    hostelRoomNumber,
+  } = props;
+  const [Name, setName] = React.useState(name);
+  const [RollNumber, setRollNumber] = React.useState(rollNumber);
+  const [PhoneNumber, setPhoneNumber] = React.useState(phoneNumber);
+  const [Branch, setBranch] = React.useState(branch);
+  const [Image, setImage] = React.useState(image);
+  const [Requests, setRequests] = React.useState(requests);
+  const [Hostel, setHostel] = React.useState(hostel);
+  const [HostelRoomNumber, setHostelRoomNumber] =
+    React.useState(hostelRoomNumber);
   const [userRequest, setRequest] = useState(requests);
+  const [readOnlyChecker, setReadOnlyChecker] = useState(true);
+  React.useEffect(() => {
+    setName(name);
+    setRollNumber(rollNumber);
+    setPhoneNumber(phoneNumber);
+    setBranch(branch);
+    setRequest(requests);
+    setImage(image);
+    setHostelRoomNumber(hostelRoomNumber);
+    setHostel(hostel);
+  }, [props]);
   const removeRequestHandler = (id) => {
     setRequest(userRequest.filter((req) => req._id !== id));
   };
+  const textFieldColor = "grey";
+  const textFieldSX = {
+    input: {
+      "-webkit-text-fill-color": `${textFieldColor} !important`,
+      color: `${textFieldColor} !important`,
+    },
+  };
+  async function handleSaveProfile(props) {}
   return (
     <Grid container>
+      {console.log(Name, "pel dunga", name)}
       <Grid item xs={12} sm={6}>
         <Card sx={{}}>
           <CardHeader
@@ -52,7 +87,11 @@ export default function ProfilePage(props) {
               justifyContent: "center",
               justifyItems: "center",
             }}
-            title={<Typography variant="h1">YOUR PROFILE</Typography>}
+            title={
+              <Typography variant="h1" style={{ color: "#1976D2" }}>
+                YOUR PROFILE
+              </Typography>
+            }
           />
           <Grid
             container
@@ -76,7 +115,7 @@ export default function ProfilePage(props) {
             </Grid>
           </Grid>
           <CardHeader
-            style={{ marginTop: "-10px" }}
+            style={{ marginTop: "-5px" }}
             title={
               <TextField
                 id="outlined-helperText"
@@ -91,8 +130,21 @@ export default function ProfilePage(props) {
                     Name
                   </Typography>
                 }
-                value={name}
-                fullWidth="true"
+                value={Name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                fullWidth={true}
+                error={!Name}
+                helperText={
+                  !readOnlyChecker && !Name ? (
+                    <div style={{ marginLeft: "-10px" }}>
+                      Name can't be empty
+                    </div>
+                  ) : (
+                    ``
+                  )
+                }
                 inputProps={{
                   style: {
                     color: "grey",
@@ -102,6 +154,7 @@ export default function ProfilePage(props) {
                   },
                 }}
                 InputProps={{
+                  readOnly: readOnlyChecker,
                   style: {
                     color: "grey",
                     fontFamily: `'Robot',sans-serif`,
@@ -116,9 +169,32 @@ export default function ProfilePage(props) {
             title={
               <TextField
                 id="outlined-basic"
+                sx={textFieldSX}
+                disabled={readOnlyChecker}
                 label={<div style={{ marginRight: "12px" }}>Roll Number</div>}
-                defaultValue={rollNumber}
-                fullWidth="true"
+                value={RollNumber}
+                fullWidth={true}
+                error={!RollNumber}
+                helperText={
+                  !readOnlyChecker && !RollNumber ? (
+                    <div style={{ marginLeft: "-10px" }}>
+                      Roll Number can't be empty
+                    </div>
+                  ) : (
+                    ``
+                  )
+                }
+                onChange={(e) => {
+                  setRollNumber(e.target.value);
+                }}
+                inputProps={{
+                  style: {
+                    color: "grey",
+                    fontFamily: `'Robot',sans-serif`,
+                    fontWeight: 700,
+                    borderColor: "white",
+                  },
+                }}
                 InputLabelProps={{
                   style: {
                     fontSize: 18,
@@ -127,14 +203,8 @@ export default function ProfilePage(props) {
                     color: "grey",
                   },
                 }}
-                inputProps={{
-                  style: {
-                    color: "grey",
-                    fontFamily: `'Robot',sans-serif`,
-                    fontWeight: 700,
-                  },
-                }}
                 InputProps={{
+                  readOnly: readOnlyChecker,
                   style: {
                     color: "grey",
                     fontFamily: `'Robot',sans-serif`,
@@ -148,7 +218,9 @@ export default function ProfilePage(props) {
             style={{ marginTop: "-20px" }}
             title={
               <TextField
+                disabled={readOnlyChecker}
                 id="outlined-helperText"
+                sx={textFieldSX}
                 label={
                   <Typography
                     variant="h6a"
@@ -160,16 +232,31 @@ export default function ProfilePage(props) {
                     Number
                   </Typography>
                 }
-                defaultValue={phoneNumber}
-                fullWidth="true"
+                value={PhoneNumber}
+                fullWidth={true}
+                error={!PhoneNumber}
+                onChange={(e) => {
+                  setPhoneNumber(e.target.value);
+                }}
+                helperText={
+                  !readOnlyChecker && !PhoneNumber ? (
+                    <div style={{ marginLeft: "-10px" }}>
+                      Phone Number can't be empty
+                    </div>
+                  ) : (
+                    ``
+                  )
+                }
                 inputProps={{
                   style: {
                     color: "grey",
                     fontFamily: `'Robot',sans-serif`,
                     fontWeight: 700,
+                    borderColor: "white",
                   },
                 }}
                 InputProps={{
+                  readOnly: readOnlyChecker,
                   style: {
                     color: "grey",
                     fontFamily: `'Robot',sans-serif`,
@@ -183,7 +270,9 @@ export default function ProfilePage(props) {
             style={{ marginTop: "-20px" }}
             title={
               <TextField
+                disabled={readOnlyChecker}
                 id="outlined-helperText"
+                sx={textFieldSX}
                 label={
                   <Typography
                     variant="h6a"
@@ -195,8 +284,21 @@ export default function ProfilePage(props) {
                     Branch
                   </Typography>
                 }
-                defaultValue={branch}
-                fullWidth="true"
+                value={Branch}
+                fullWidth={true}
+                error={!Branch}
+                onChange={(e) => {
+                  setBranch(e.target.value);
+                }}
+                helperText={
+                  !readOnlyChecker && !Branch ? (
+                    <div style={{ marginLeft: "-10px" }}>
+                      Branch can't be empty
+                    </div>
+                  ) : (
+                    ``
+                  )
+                }
                 inputProps={{
                   style: {
                     color: "grey",
@@ -205,6 +307,7 @@ export default function ProfilePage(props) {
                   },
                 }}
                 InputProps={{
+                  readOnly: readOnlyChecker,
                   style: {
                     color: "grey",
                     fontFamily: `'Robot',sans-serif`,
@@ -214,6 +317,109 @@ export default function ProfilePage(props) {
               />
             }
           />
+          <CardHeader
+            style={{ marginTop: "-20px" }}
+            title={
+              <TextField
+                disabled={readOnlyChecker}
+                id="outlined-helperText"
+                sx={textFieldSX}
+                label={
+                  <Typography
+                    variant="h6a"
+                    style={{
+                      marginRight: "-1px",
+                      marginLeft: "1.5px",
+                    }}
+                  >
+                    Hostel
+                  </Typography>
+                }
+                value={Hostel}
+                fullWidth={true}
+                error={!Hostel}
+                onChange={(e) => {
+                  setHostel(e.target.value);
+                }}
+                helperText={
+                  !readOnlyChecker && !Hostel ? (
+                    <div style={{ marginLeft: "-10px" }}>
+                      Roll Number can't be empty
+                    </div>
+                  ) : (
+                    ``
+                  )
+                }
+                inputProps={{
+                  style: {
+                    color: "grey",
+                    fontFamily: `'Robot',sans-serif`,
+                    fontWeight: 700,
+                  },
+                }}
+                InputProps={{
+                  readOnly: readOnlyChecker,
+                  style: {
+                    color: "grey",
+                    fontFamily: `'Robot',sans-serif`,
+                    fontWeight: 700,
+                  },
+                }}
+              />
+            }
+          />
+          <CardHeader
+            style={{ marginTop: "-20px" }}
+            title={
+              <TextField
+                disabled={readOnlyChecker}
+                id="outlined-helperText"
+                sx={textFieldSX}
+                label={
+                  <Typography
+                    variant="h6a"
+                    style={{
+                      marginRight: "-1px",
+                      marginLeft: "1.5px",
+                    }}
+                  >
+                    Room Number
+                  </Typography>
+                }
+                value={HostelRoomNumber}
+                fullWidth={true}
+                error={!HostelRoomNumber}
+                onChange={(e) => {
+                  setHostelRoomNumber(e.target.value);
+                }}
+                helperText={
+                  !readOnlyChecker && !HostelRoomNumber ? (
+                    <div style={{ marginLeft: "-10px" }}>
+                      Hostel Room Number can't be empty
+                    </div>
+                  ) : (
+                    ``
+                  )
+                }
+                inputProps={{
+                  style: {
+                    color: "grey",
+                    fontFamily: `'Robot',sans-serif`,
+                    fontWeight: 700,
+                  },
+                }}
+                InputProps={{
+                  readOnly: readOnlyChecker,
+                  style: {
+                    color: "grey",
+                    fontFamily: `'Robot',sans-serif`,
+                    fontWeight: 700,
+                  },
+                }}
+              />
+            }
+          />
+
           <div
             style={{
               margin: "auto",
@@ -226,9 +432,38 @@ export default function ProfilePage(props) {
               variant="outlined"
               fullWidth={true}
               style={{ marginBottom: "10px" }}
-              endIcon={<EditIcon />}
+              endIcon={readOnlyChecker ? <EditIcon /> : <SaveIcon />}
+              onClick={() => setReadOnlyChecker(!readOnlyChecker)}
             >
-              Edit
+              {readOnlyChecker ? `Edit` : `Save`}
+            </Button>
+          </div>
+          <div
+            style={{
+              margin: "auto",
+              width: "90%",
+              paddingBottom: "",
+              backgroundColor: "",
+            }}
+          >
+            <Button
+              variant="outlined"
+              fullWidth={true}
+              style={{ marginBottom: "10px" }}
+              endIcon={<SaveIcon />}
+              onClick={handleSaveProfile}
+              disabled={
+                !(
+                  Name &&
+                  RollNumber &&
+                  PhoneNumber &&
+                  Branch &&
+                  Hostel &&
+                  HostelRoomNumber
+                )
+              }
+            >
+              Save Profile
             </Button>
           </div>
         </Card>
@@ -244,7 +479,11 @@ export default function ProfilePage(props) {
               justifyContent: "center",
               justifyItems: "center",
             }}
-            title={<Typography variant="h1">YOUR REQUESTS</Typography>}
+            title={
+              <Typography variant="h1" style={{ color: "#1976D2" }}>
+                YOUR REQUESTS
+              </Typography>
+            }
           />
           <CardContent
             style={{
@@ -263,21 +502,50 @@ export default function ProfilePage(props) {
             </Typography>
           </CardContent>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <Grid container>
-              {requests.map((elem) => {
+            {console.log(requests.length)}
+            {requests.length == 1 ? (
+              requests.map((elem) => {
                 return (
-                  <Grid item xs={12} sm={12} md={6} style={{}}>
-                    <Requests
+                  <Item
+                    style={{
+                      display: "flex",
+                      alignContent: "center",
+                      display: "flex",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      justifyItems: "center",
+                    }}
+                  >
+                    <Request
                       id={elem._id}
                       date={elem.Date}
                       reason={elem.reason}
                       status={elem.status}
                       onDelete={removeRequestHandler}
+                  style={{width:"570px"}}
                     />
-                  </Grid>
+                  </Item>
                 );
-              })}{" "}
-            </Grid>
+              })
+            ) : (
+              <Grid container>
+                {requests.map((elem) => {
+                  return (
+                    <Grid item xs={12} sm={12} md={6} style={{}}>
+                      {console.log()}
+                      <Request
+                        id={elem._id}
+                        date={elem.Date}
+                        reason={elem.reason}
+                        status={elem.status}
+                        onDelete={removeRequestHandler}
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            )}
           </Collapse>
         </Card>
       </Grid>

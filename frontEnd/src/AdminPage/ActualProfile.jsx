@@ -9,23 +9,22 @@ export default function ProfilePage() {
   const [image, setImage] = useState("");
   const [request, setRequest] = useState(['1', '2', '3', '4', '5']);
 
-  useEffect(() => {
-    const getUser = async () => {
-      const response = await axiosInstance.get(
-        "http://localhost:9000/api/v1/user/profile-page"
-      );
-      const {name, image, phoneNo, rollNo, branch, requests} =
-        response.data.data.user;
-      setName(name);
-      setImage(image);
-      setPhoneNo(phoneNo);
-      setRollNo(rollNo);
-      setBranch(branch);
-      setRequest(requests);
-      console.log(requests);
-    };
-    getUser();
-  }, []);
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     const response = await axiosInstance.get(
+  //       "http://localhost:9000/api/v1/user/profile-page"
+  //     );
+  //     const {name, image, phoneNo, rollNo, branch, requests} =
+  //       response.data.data.user;
+  //     setName(name);
+  //     setImage(image);
+  //     setPhoneNo(phoneNo);
+  //     setRollNo(rollNo);
+  //     setBranch(branch);
+  //     setRequest(requests);
+  //   };
+  //   getUser();
+  // }, []);
 
   return (
     <ProfilePageCard/>

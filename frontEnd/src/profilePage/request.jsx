@@ -1,33 +1,32 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import { bottomNavigationClasses, Button, Typography } from "@mui/material";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {Button, Typography} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
-import EditIcon from "@mui/icons-material/Edit";
-import { Grid, TextField } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { yellow } from "@mui/material/colors";
+import {TextField} from "@mui/material";
+import {yellow} from "@mui/material/colors";
 import axiosInstance from "../util/axiosIntance";
-import { useNavigate } from "react-router";
 const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
+  const {expand, ...other} = props;
   return <IconButton {...other} />;
-})(({ theme, expand }) => ({
+})(({theme, expand}) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   marginLeft: "auto",
   transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+
+const textFieldColor = "grey";
+const textFieldSX = {
+  input: {
+    "-webkit-text-fill-color": `${textFieldColor} !important`,
+    color: `${textFieldColor} !important`,
+  },
+};
 
 function request(props) {
   const date = props.date;
@@ -42,18 +41,19 @@ function request(props) {
     // navigate('/user/profile-page');
   };
   return (
-    <Card variant="outlined" style={{ margin: "10px" }}>
+    <Card variant="outlined" style={{margin: "10px" , ...props.style}}>
       {Status && Status === "confirmed" ? (
         <CheckCircleIcon color="success" />
       ) : (
-        <PendingActionsIcon sx={{ color: yellow[500] }} />
+        <PendingActionsIcon sx={{color: yellow[500]}} />
       )}
       <CardHeader
-        style={{ marginTop: "10px" }}
+        style={{marginTop: "10px"}}
         title={
           <TextField
             id="outlined-helperText"
-            disabled="disabled"
+            sx={textFieldSX}
+            disabled={true}
             label={
               <Typography
                 variant="h6a"
@@ -86,12 +86,14 @@ function request(props) {
         }
       />
       <CardHeader
-        style={{ marginTop: "-20px" }}
+        style={{marginTop: "-20px"}}
         title={
           <TextField
-            disabled="disabled"
+
+            sx={textFieldSX}
+            disabled={true}
             id="outlined-basic"
-            label={<div style={{ marginRight: "12px" }}>Reason</div>}
+            label={<div style={{marginRight: "12px"}}>Reason</div>}
             defaultValue={Reason}
             fullWidth="true"
             InputLabelProps={{
@@ -120,11 +122,13 @@ function request(props) {
         }
       />
       <CardHeader
-        style={{ marginTop: "-20px" }}
+        style={{marginTop: "-20px"}}
         title={
           <TextField
+
+            sx={textFieldSX}
+            disabled={true}
             id="outlined-helperText"
-            disabled="disabled"
             label={
               <Typography
                 variant="h6a"
@@ -167,7 +171,7 @@ function request(props) {
         <Button
           color="error"
           variant="outlined"
-          style={{ paddingBottom: "" }}
+          style={{paddingBottom: ""}}
           onClick={deleteRequestHandler}
         >
           Delete Pass Request
