@@ -10,12 +10,13 @@ const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
 const AppError = require("./utils/appError");
 const cookieParser = require("cookie-parser");
-const cors=require('cors')
+const cors = require("cors");
 
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const requestRouter = require("./routes/requestRoutes");
 const globalErrorHandler = require("./Controllers/errorController");
+const UserModel = require("./models/UserModel");
 
 process.on("uncaughtException", (err) => {
   console.log(err.name, err.message);
@@ -44,10 +45,7 @@ app.use(
 app.use(express.json());
 
 app.use(function (req, res, next) {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "http://localhost:3000"
-  );
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Credentials", true);
@@ -82,6 +80,19 @@ app.use((req, res, next) => {
   if (!req.user) return next();
   if (req.user.mailId === "20cs010@iitbbs.ac.in") req.session.isAdmin = true;
   else req.session.isAdmin = false;
+  next();
+});
+
+app.use(async (req, res, next) => {
+  const date = new Date().getDate();
+  const hrs = new Date().getHours();
+  const allUsers = await UserModel.find({}).exec();
+  if (date === 1 && hrs === 1) {
+    allUsers.map((user) => {
+      user.requestsPerMonth = 0;
+      user.save();
+    });
+  }
   next();
 });
 

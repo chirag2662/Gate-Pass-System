@@ -3,6 +3,7 @@ const AppError = require("./../utils/appError");
 const nodemailer = require("nodemailer");
 const QRCode = require("qrcode");
 const requestModel = require("./../models/requestModel");
+const UserModel = require("../models/UserModel");
 
 exports.getAllRequestForAdmin = catchAsync(async (req, res, next) => {
   const requests = await requestModel
@@ -61,8 +62,6 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
   });
 
   if (status == "rejected") {
-    await requestModel.findByIdAndDelete(requestId);
-
     var mailOptions = {
       from: process.env.NODEMAILER_ID,
       to: request.bookedby.mailId,
@@ -75,8 +74,20 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
         console.log(error);
       } else console.log("Mail send successfully");
     });
+    await requestModel.findByIdAndDelete(requestId);
     res.status(200).send("Request is rejected");
   } else {
+    const requsetUser = await UserModel.findByIdAndUpdate(
+      request.bookedby._id,
+      {
+        $inc: { requestsPerMonth: 1 },
+      }
+    );
+
+    if (requsetUser.requestsPerMonth >= 2)
+      return next(
+        new AppError("You have already made 2 requests in this month", 404)
+      );
     request.status = "confirmed";
     //send a mail to user that request is confirmed
     var mailOptions = {
