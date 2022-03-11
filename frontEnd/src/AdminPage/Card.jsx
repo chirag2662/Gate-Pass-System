@@ -1,30 +1,32 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import { Button, Typography } from "@mui/material";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EditIcon from "@mui/icons-material/Edit";
-import { Grid, TextField } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import {Button, Typography, ListItem as Item} from "@mui/material";
+import {Grid} from "@mui/material";
 import Requests from "./request";
 import axiosInstance from "../util/axiosIntance";
 const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
+  const {expand, ...other} = props;
   return <IconButton {...other} />;
-})(({ theme, expand }) => ({
+})(({theme, expand}) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   marginLeft: "auto",
   transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+const textFieldColor = "grey"
+const textFieldSX = {
+  input: {
+    "-webkit-text-fill-color": `${textFieldColor} !important`,
+    color: `${textFieldColor} !important`,
+  },
+};
+
 export default function AdminPage(props) {
   const [expanded, setExpanded] = React.useState(false);
   const handleExpandClick = () => {
@@ -43,6 +45,7 @@ export default function AdminPage(props) {
       );
       const req = response.data;
       setRequests(req);
+      console.log("requests= ", req);
     };
     getUser();
   }, []);
@@ -54,7 +57,7 @@ export default function AdminPage(props) {
   return (
     <Grid container>
       <Grid item xs={12} sm={12}>
-        <Card style={{ margin: "10px" }}>
+        <Card style={{margin: "10px"}}>
           <CardHeader
             style={{
               display: "flex",
@@ -64,7 +67,11 @@ export default function AdminPage(props) {
               justifyContent: "center",
               justifyItems: "center",
             }}
-            title={<Typography variant="h1">VARIOUS REQUESTS</Typography>}
+            title={
+              <Typography variant="h1" style={{color: "#1976D2"}}>
+                VARIOUS REQUESTS
+              </Typography>
+            }
           />
           <CardContent
             style={{
@@ -83,15 +90,57 @@ export default function AdminPage(props) {
             </Typography>
           </CardContent>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <Grid container>
-              {requests.map((elem) => {
+            {requests.length == 1 ? (
+              requests.map((elem) => {
                 return (
-                  <Grid key={elem._id} item xs={12} sm={12} md={6} style={{}}>
-                    <Requests request={elem} onDelete={removeRequestHandler} />
-                  </Grid>
+                  <Item
+                    key={elem._id}
+                    item
+                    style={{
+                      display: "flex",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      justifyItems: "center",
+                    }}
+                  >
+                    <Requests
+                      request={elem}
+                      style={{
+                        width: "540px",
+                        alignContent: "center",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        justifyItems: "center",
+                      }}
+                      onDelete={removeRequestHandler}
+                    />
+                  </Item>
                 );
-              })}{" "}
-            </Grid>
+              })
+            ) : (
+              <Grid container>
+                {requests.map((elem) => {
+                  return (
+                    <Grid
+                      key={elem._id}
+                      item
+                      xs={12}
+                      sm={12}
+                      md={6}
+                      lg={6}
+                      xl={6}
+                      style={{}}
+                    >
+                      <Requests
+                        request={elem}
+                        onDelete={removeRequestHandler}
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            )}
           </Collapse>
         </Card>
       </Grid>

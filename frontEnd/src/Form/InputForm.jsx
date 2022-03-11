@@ -23,10 +23,17 @@ export default function InputForm() {
   const authCtx = React.useContext(AuthContext);
   const navigate = useNavigate();
   const [reason, setReason] = React.useState("");
-  const [modeOfTravel, setModeOfTravel] = React.useState("");
+  const [modeOfTracvel, setModeOfTravel] = React.useState("");
+  const [checkRequest, setCheckRequest] = React.useState(false);
+  const [buttonOscillator, setButtonOscillator] = React.useState(false);
+  React.useEffect(() => {
+    if (modeOfTracvel && reason && value) setButtonOscillator(false);
+    else setButtonOscillator(true);
+  });
   async function handleClick(e) {
+    setCheckRequest(true);
     const body = {
-      modeOfTravel,
+      modeOfTracvel,
       reason,
       Date: value,
     };
@@ -92,7 +99,17 @@ export default function InputForm() {
                       setValue(newValue);
                     }}
                     renderInput={(params) => (
-                      <TextField {...params} fullWidth={true} />
+                      <TextField
+                        {...params}
+                        fullWidth={true}
+                        InputProps={{
+                          style: {
+                            color: "grey",
+                            fontFamily: `'Robot',sans-serif`,
+                            fontWeight: 700,
+                          },
+                        }}
+                      />
                     )}
                   />
                 </Item>
@@ -100,12 +117,35 @@ export default function InputForm() {
                   <TextField
                     id="outlined-basic"
                     label="Mode Of Travel"
-                    value={modeOfTravel}
+                    value={modeOfTracvel}
+                    error={!modeOfTracvel && checkRequest}
+                    helperText={
+                      !modeOfTracvel && checkRequest ? (
+                        <div style={{ marginLeft: "-10px" }}>
+                          Mode Of Travel can't be empty
+                        </div>
+                      ) : (
+                        ``
+                      )
+                    }
                     onChange={(e) => setModeOfTravel(e.target.value)}
                     variant="outlined"
                     fullWidth={true}
                     multiline={true}
+                    inputProps={{
+                      style: {
+                        color: "grey",
+                        fontFamily: `'Robot',sans-serif`,
+                        fontWeight: 700,
+                      },
+                    }}
                     InputProps={{
+                      style: {
+                        color: "grey",
+                        fontFamily: `'Robot',sans-serif`,
+                        fontWeight: 700,
+                      },
+
                       endAdornment: <div style={{ marginLeft: "21px" }}></div>,
                     }}
                   />
@@ -118,12 +158,32 @@ export default function InputForm() {
                     multiline={true}
                     fullWidth={true}
                     value={reason}
+                    error={!reason && checkRequest}
+                    helperText={
+                      !reason && checkRequest ? (
+                        <div style={{ marginLeft: "-10px" }}>
+                          Reason can't be empty
+                        </div>
+                      ) : (
+                        ``
+                      )
+                    }
                     onChange={(e) => setReason(e.target.value)}
+                    inputProps={{
+                      style: {
+                        color: "grey",
+                        fontFamily: `'Robot',sans-serif`,
+                        fontWeight: 700,
+                      },
+                    }}
                     InputProps={{
                       style: {
-                        borderColor: "blue",
+                        color: "grey",
+                        fontFamily: `'Robot',sans-serif`,
+                        fontWeight: 700,
                       },
-                      endAdornment: <div style={{ marginLeft: "42px" }}></div>,
+
+                      endAdornment: <div style={{ marginLeft: "21px" }}></div>,
                     }}
                   />
                 </Item>
@@ -132,6 +192,7 @@ export default function InputForm() {
                     variant="outlined"
                     fullWidth={true}
                     onClick={handleClick}
+                    disabled={buttonOscillator}
                   >
                     Submit Request
                   </Button>
