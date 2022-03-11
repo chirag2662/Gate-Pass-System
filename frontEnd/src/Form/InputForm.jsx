@@ -21,7 +21,6 @@ import { AuthContext } from "../context/auth.js";
 export default function InputForm() {
   const [value, setValue] = React.useState(new Date());
   const authCtx = React.useContext(AuthContext);
-  console.log(authCtx.user);
   const navigate = useNavigate();
   const [reason, setReason] = React.useState("");
   const [modeOfTravel, setModeOfTravel] = React.useState("");
@@ -39,9 +38,8 @@ export default function InputForm() {
   }
 
   const { user } = authCtx;
-  console.log(user);
   if (!user) return <Navigate to="/" />;
-  if (user.isAdmin) return <Navigate to="/Admin/requests" />;
+  if (user&&user.isAdmin) return <Navigate to="/Admin/requests" />;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>

@@ -29,12 +29,11 @@ export default function ButtonAppBar() {
   const [sideBar, setSideBar] = React.useState(false);
   const navigate = useNavigate();
   function handleClick(e) {
-    console.log(e);
     setSideBar(!sideBar);
   }
   const { user } = authCtx;
   let menuBarList = [];
-  if (!user.isAdmin) menuBarList = ["Profile", "New Request"];
+  if (user && !user.isAdmin) menuBarList = ["Profile", "New Request"];
   else menuBarList = ["All Requests"];
 
   const list = (anchor) => (
@@ -115,6 +114,7 @@ export default function ButtonAppBar() {
             color="inherit"
             variant="outlined"
             href="http://localhost:9000/api/v1/logout"
+            onClick={authCtx.logout}
           >
             <LogoutIcon />
             {width <= 414 ? `` : `Logout`}

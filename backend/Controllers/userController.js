@@ -77,7 +77,6 @@ exports.getUser = catchAsync(async (req, res) => {
   }
 
   const token = generateToken(user, req);
-  console.log(token);
 
   res.status(200).json({
     status: "success",

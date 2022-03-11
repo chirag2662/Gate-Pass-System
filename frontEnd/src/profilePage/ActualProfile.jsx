@@ -30,12 +30,9 @@ export default function ProfilePage() {
     };
     getUser();
   }, []);
-
   const { user } = authCtx;
-  console.log(user);
   if (!user) return <Navigate to="/" />;
-  if (user.isAdmin) return <Navigate to="/Admin/requests" />;
-
+  if (user && user.isAdmin) return <Navigate to="/Admin/requests" />;
   return (
     <ProfilePageCard
       name={name}
