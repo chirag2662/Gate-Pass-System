@@ -3,6 +3,7 @@ const Request = require("./../models/requestModel");
 
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const jwt = require("jsonwebtoken");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -10,6 +11,20 @@ const filterObj = (obj, ...allowedFields) => {
     if (allowedFields.includes(el)) newObj[el] = obj[el];
   });
   return newObj;
+};
+
+const generateToken = (newUser, req) => {
+  const token = jwt.sign(
+    {
+      id: newUser._id,
+      email: newUser.mailId,
+      name: newUser.name,
+      isAdmin: req.session.isAdmin,
+    },
+    process.env.SCERET_KEY,
+    { expiresIn: "5h" }
+  );
+  return token;
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -61,10 +76,14 @@ exports.getUser = catchAsync(async (req, res) => {
     return next(new AppError("No doc found with that id", 404));
   }
 
+  const token = generateToken(user, req);
+  console.log(token);
+
   res.status(200).json({
     status: "success",
     data: {
       user,
+      token,
     },
   });
 });
