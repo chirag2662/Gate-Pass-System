@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Navigate } from "react-router";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -11,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import { Grid, TextField, ListItem as Item } from "@mui/material";
 import Request from "./request";
+import axiosInstance from "../util/axiosIntance";
 import { useState } from "react";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -42,6 +44,7 @@ export default function ProfilePage(props) {
     hostelRoomNumber,
   } = props;
   const [Name, setName] = React.useState(name);
+  const [isEdit, setIsEdit] = useState(false);
   const [RollNumber, setRollNumber] = React.useState(rollNumber);
   const [PhoneNumber, setPhoneNumber] = React.useState(phoneNumber);
   const [Branch, setBranch] = React.useState(branch);
@@ -72,10 +75,24 @@ export default function ProfilePage(props) {
       color: `${textFieldColor} !important`,
     },
   };
-  async function handleSaveProfile(props) {}
+  async function handleSaveProfile(e) {
+    e.preventDefault();
+    const body = {
+      rollNo: RollNumber,
+      phoneNo: PhoneNumber,
+      roomNo: HostelRoomNumber,
+      hostel: Hostel,
+      branch: Branch,
+    };
+    const response = await axiosInstance.post(
+      "http://localhost:9000/api/v1/user/updateMe",
+      body
+    );
+    setIsEdit(false);
+    return <Navigate to="/user/profile-page" />;
+  }
   return (
     <Grid container>
-      {console.log(Name, "pel dunga", name)}
       <Grid item xs={12} sm={6}>
         <Card sx={{}}>
           <CardHeader
@@ -225,7 +242,7 @@ export default function ProfilePage(props) {
                   <Typography
                     variant="h6a"
                     style={{
-                      marginRight: "-1px",
+                      marginRight: "4px",
                       marginLeft: "1.5px",
                     }}
                   >
@@ -277,7 +294,7 @@ export default function ProfilePage(props) {
                   <Typography
                     variant="h6a"
                     style={{
-                      marginRight: "-1px",
+                      marginRight: "4px",
                       marginLeft: "1.5px",
                     }}
                   >
@@ -328,7 +345,7 @@ export default function ProfilePage(props) {
                   <Typography
                     variant="h6a"
                     style={{
-                      marginRight: "-1px",
+                      marginRight: "4px",
                       marginLeft: "1.5px",
                     }}
                   >
@@ -344,7 +361,7 @@ export default function ProfilePage(props) {
                 helperText={
                   !readOnlyChecker && !Hostel ? (
                     <div style={{ marginLeft: "-10px" }}>
-                      Roll Number can't be empty
+                      Hostel can't be empty
                     </div>
                   ) : (
                     ``
@@ -379,7 +396,7 @@ export default function ProfilePage(props) {
                   <Typography
                     variant="h6a"
                     style={{
-                      marginRight: "-1px",
+                      marginRight: "4px",
                       marginLeft: "1.5px",
                     }}
                   >
@@ -428,44 +445,52 @@ export default function ProfilePage(props) {
               backgroundColor: "",
             }}
           >
-            <Button
-              variant="outlined"
-              fullWidth={true}
-              style={{ marginBottom: "10px" }}
-              endIcon={readOnlyChecker ? <EditIcon /> : <SaveIcon />}
-              onClick={() => setReadOnlyChecker(!readOnlyChecker)}
-            >
-              {readOnlyChecker ? `Edit` : `Save`}
-            </Button>
+            {!isEdit && (
+              <Button
+                variant="outlined"
+                fullWidth={true}
+                style={{ marginBottom: "10px" }}
+                endIcon={<EditIcon />}
+                onClick={() => {
+                  setReadOnlyChecker(!readOnlyChecker);
+                  setIsEdit(true);
+                }}
+              >
+                {`Edit`}
+              </Button>
+            )}
           </div>
-          <div
-            style={{
-              margin: "auto",
-              width: "90%",
-              paddingBottom: "",
-              backgroundColor: "",
-            }}
-          >
-            <Button
-              variant="outlined"
-              fullWidth={true}
-              style={{ marginBottom: "10px" }}
-              endIcon={<SaveIcon />}
-              onClick={handleSaveProfile}
-              disabled={
-                !(
-                  Name &&
-                  RollNumber &&
-                  PhoneNumber &&
-                  Branch &&
-                  Hostel &&
-                  HostelRoomNumber
-                )
-              }
+          {isEdit && (
+            <div
+              style={{
+                margin: "auto",
+                width: "90%",
+                paddingBottom: "",
+                backgroundColor: "",
+              }}
             >
-              Save Profile
-            </Button>
-          </div>
+              <Button
+                variant="outlined"
+                fullWidth={true}
+                type="submit"
+                style={{ marginBottom: "10px" }}
+                endIcon={<SaveIcon />}
+                onClick={handleSaveProfile}
+                disabled={
+                  !(
+                    Name &&
+                    RollNumber &&
+                    PhoneNumber &&
+                    Branch &&
+                    Hostel &&
+                    HostelRoomNumber
+                  )
+                }
+              >
+                Save Profile
+              </Button>
+            </div>
+          )}
         </Card>
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -502,7 +527,6 @@ export default function ProfilePage(props) {
             </Typography>
           </CardContent>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
-            {console.log(requests.length)}
             {requests.length == 1 ? (
               requests.map((elem) => {
                 return (
@@ -523,7 +547,7 @@ export default function ProfilePage(props) {
                       reason={elem.reason}
                       status={elem.status}
                       onDelete={removeRequestHandler}
-                  style={{width:"570px"}}
+                      style={{ width: "570px" }}
                     />
                   </Item>
                 );
@@ -533,7 +557,6 @@ export default function ProfilePage(props) {
                 {requests.map((elem) => {
                   return (
                     <Grid item xs={12} sm={12} md={6} style={{}}>
-                      {console.log()}
                       <Request
                         id={elem._id}
                         date={elem.Date}

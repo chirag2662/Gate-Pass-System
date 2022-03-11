@@ -10,8 +10,8 @@ export default function ProfilePage() {
   const [rollNo, setRollNo] = useState("");
   const [image, setImage] = useState("");
 
-  const [hostel, setHostel] = useState('');
-  const [hostelRoomNumber, setHostelRoomNumber] = useState('')
+  const [hostel, setHostel] = useState("");
+  const [hostelRoomNumber, setHostelRoomNumber] = useState("");
 
   const [request, setRequest] = useState([]);
   const authCtx = useContext(AuthContext);
@@ -21,8 +21,17 @@ export default function ProfilePage() {
         "http://localhost:9000/api/v1/user/profile-page"
       );
 
-      const {name, image, phoneNo, rollNo, branch, requests, hostel, hostelRoomNumber} =
-        response.data.data.user;
+      const {
+        name,
+        image,
+        phoneNo,
+        rollNo,
+        branch,
+        requests,
+        hostel,
+        roomNo,
+        mailId,
+      } = response.data.data.user;
       const { token } = response.data.data;
       authCtx.login({ name, token, mailId });
       setName(name);
@@ -31,8 +40,8 @@ export default function ProfilePage() {
       setRollNo(rollNo);
       setBranch(branch);
       setRequest(requests);
-      setHostel(hostel)
-      setHostelRoomNumber(hostelRoomNumber)
+      setHostel(hostel);
+      setHostelRoomNumber(roomNo);
     };
     getUser();
   }, []);
@@ -42,9 +51,11 @@ export default function ProfilePage() {
   return (
     <ProfilePageCard
       name={name}
-      Branch={branch}
+      branch={branch}
       phoneNumber={phoneNo}
       rollNumber={rollNo}
+      hostelRoomNumber={hostelRoomNumber}
+      hostel={hostel}
       image={image}
       requests={request}
     />
