@@ -53,8 +53,23 @@ app.use(passport.session());
 
 app.use((req, res, next) => {
   if (!req.user) return next();
-  if (req.user.mailId === "20cs01029@iitbbs.ac.in") req.session.isAdmin = true;
-  else req.session.isAdmin = false;
+  if (req.user.mailId === process.env.ADMIN_ID) {
+    req.session.isAdmin = true;
+    req.session.save();
+  } else req.session.isAdmin = false;
+  next();
+});
+
+app.use(async (req, res, next) => {
+  const date = new Date().getDate();
+  const hrs = new Date().getHours();
+  if (date === 1 && hrs === 1) {
+    const allUsers = await UserModel.find({}).exec();
+    allUsers.map((user) => {
+      user.requestsPerMonth = 0;
+      user.save();
+    });
+  }
   next();
 });
 

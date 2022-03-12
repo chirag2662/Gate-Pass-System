@@ -32,7 +32,6 @@
 
           <ul class="nav nav-pills nav-stacked">
             <li class="active"><a href="/user/profile-page"> <i class="fa fa-user"></i> Profile</a></li>
-            <li><a href="/user/update-form"> <i class="fa fa-edit"></i> Edit profile</a></li>
             <li><a href="/request/request-form"> <i class="fa fa-edit"></i> New Request</a></li>
             <li><a href="/logout"> <i class="fa fa-edit"></i> Log Out</a></li>
             <!-- <li><a href="/user/deleteMe"> <i class="fa fa-edit"></i> Delete Account</a></li> -->
@@ -48,11 +47,10 @@
             <h1>Bio Data</h1>
             <div class="row">
               <div class="bio-row">
-                <p><span>First Name </span>: <%=user.name.split(" ")[0]%></p>
+                <p><span>Name </span>: <%=user.name%></p>
               </div>
               <div class=" bio-row">
-                    <p><span>Last Name </span>: <%var n=user.name.split(" ");%>
-                      <%=n[n.length - 1];%></p>
+                    <p><span>Hostel </span>: <%=user.hostel%></p>
               </div>
               <div class=" bio-row">
                         <p><span>Roll No</span>: <%=user.rollNo%>
@@ -67,7 +65,7 @@
                 </p>
               </div>
               <div class="bio-row">
-                <p><span>Roll No </span>: <%=user.rollNo%>
+                <p><span>Room No </span>: <%=user.roomNo%>
                 </p>
               </div>
             </div>

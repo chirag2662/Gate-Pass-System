@@ -2,11 +2,9 @@ const express = require("express");
 const router = express.Router();
 const {
   ensureAuth,
-  ensureGuest,
   isAdmin,
   notAdmin,
 } = require("../middleware/auth");
-const userController = require("../Controllers/userController");
 const requestController = require("../Controllers/requestController");
 const {
   getAllRequestForAdmin,
