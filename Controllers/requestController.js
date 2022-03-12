@@ -6,9 +6,14 @@ const User = require("./../models/UserModel");
 const Request = require("./../models/requestModel");
 
 exports.createRequest = catchAsync(async (req, res, next) => {
-  if (req.user.requestsPerMonth >= 2)
+  if (req.user.requestsPerMonth >= parseInt(process.env.requestsPerMonth))
     return next(
-      new AppError("You have already made 2 requests in this month", 404)
+      new AppError(
+        `You have already made ${parseInt(
+          process.env.requestsPerMonth
+        )} requests in this month`,
+        404
+      )
     );
 
   const requestObj = Object.assign(req.body, { bookedby: req.user._id });
@@ -54,8 +59,9 @@ exports.getRequestForm = catchAsync(async (req, res) => {
     return next(new AppError("No doc found with that id", 404));
   }
   let requestsPerMonth = false;
-  if (user.requestsPerMonth >=  parseInt(process.env.requestsPerMonth)) requestsPerMonth = true;
-  res.status(200).render("requestForm", { user: user,requestsPerMonth },);
+  if (user.requestsPerMonth >= parseInt(process.env.requestsPerMonth))
+    requestsPerMonth = true;
+  res.status(200).render("requestForm", { user: user, requestsPerMonth });
 });
 
 exports.deleteRequest = catchAsync(async (req, res) => {

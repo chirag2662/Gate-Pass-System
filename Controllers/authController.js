@@ -87,7 +87,7 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
     $inc: { requestsPerMonth: 1 },
   });
 
-  if (requsetUser.requestsPerMonth >= 2)
+  if (requsetUser.requestsPerMonth >= parseInt(process.env.requestsPerMonth))
     return next(
       new AppError("You have already made 2 requests in this month", 404)
     );

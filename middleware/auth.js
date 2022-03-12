@@ -1,7 +1,7 @@
 module.exports = {
   ensureAuth: (req, res, next) => {
     if (req.isAuthenticated()) return next();
-    else res.redirect("/");
+    else res.redirect("/logout");
   },
   ensureGuest: (req, res, next) => {
     if (req.isAuthenticated()) res.redirect("/profile-page");
@@ -9,7 +9,7 @@ module.exports = {
   },
   isAdmin: (req, res, next) => {
     if (req.session.isAdmin) return next();
-    else res.redirect("/");
+    else res.redirect("/logout");
   },
   notAdmin: (req, res, next) => {
     if (req.session.isAdmin) res.redirect("/request/admin");
