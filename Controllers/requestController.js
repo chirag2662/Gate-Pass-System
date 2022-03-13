@@ -15,6 +15,25 @@ exports.createRequest = catchAsync(async (req, res, next) => {
         404
       )
     );
+  if (
+    req.body.modeOfTravel.trim().length === 0 ||
+    req.body.reason.trim().length === 0
+  ) {
+    let errorMsg = [
+      `${
+        req.body.modeOfTravel.trim().length === 0 &&
+        "Mode of Travel must not be empty"
+      }`,
+      `${req.body.reason.trim().length === 0 && "Reason must not be empty"}`,
+    ];
+    const user = await User.findById(req.user._id);
+    return res.status(200).render("requestForm", {
+      user,
+      requestsPerMonth: false,
+      path: "/request-form",
+      error: errorMsg,
+    });
+  }
 
   const requestObj = Object.assign(req.body, { bookedby: req.user._id });
   const request = await Request.create(requestObj);
@@ -61,7 +80,12 @@ exports.getRequestForm = catchAsync(async (req, res) => {
   let requestsPerMonth = false;
   if (user.requestsPerMonth >= parseInt(process.env.requestsPerMonth))
     requestsPerMonth = true;
-  res.status(200).render("requestForm", { user: user, requestsPerMonth ,path:"/request-form"});
+  res.status(200).render("requestForm", {
+    user: user,
+    requestsPerMonth,
+    path: "/request-form",
+    error: false,
+  });
 });
 
 exports.deleteRequest = catchAsync(async (req, res) => {
