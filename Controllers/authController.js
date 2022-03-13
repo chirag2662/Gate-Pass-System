@@ -85,7 +85,7 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
 
   const requsetUser = await UserModel.findByIdAndUpdate(request.bookedby._id, {
     $inc: { requestsPerMonth: 1 },
-  });
+  }).populate("requests");;
 
   if (requsetUser.requestsPerMonth >= parseInt(process.env.requestsPerMonth))
     return next(
@@ -115,6 +115,25 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
       console.log(error);
     } else console.log("Mail send successfully");
   });
+  
+  //Delete the other request is requestsPerMonth of ceertain user===2
+  if (
+    requsetUser.requestsPerMonth ===
+    parseInt(process.env.requestsPerMonth) - 1
+  ) {
+    const remainingPendingRequest = requsetUser.requests.filter((req) => {
+      const monthDiff = req.Date.getMonth() - request.Date.getMonth();
+      return (
+        req.status === "pending" &&
+        req._id.toString() !== request._id.toString() &&
+        monthDiff < 1
+      );
+    });
+    // console.log(remainingPendingRequest);
+    remainingPendingRequest.map(
+      async (req) => await requestModel.findByIdAndDelete(req._id)
+    );
+  }
 
   await request.save();
   res.redirect("/request/admin");
