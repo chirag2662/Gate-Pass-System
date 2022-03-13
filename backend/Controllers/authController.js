@@ -82,35 +82,58 @@ exports.updateRequestStatus = catchAsync(async (req, res, next) => {
       {
         $inc: { requestsPerMonth: 1 },
       }
-    );
+    ).populate("requests");
 
-    if (requsetUser.requestsPerMonth >= 2)
+    if (requsetUser.requestsPerMonth >= parseInt(process.env.requestsPerMonth))
       return next(
-        new AppError("You have already made 2 requests in this month", 404)
+        new AppError(
+          `You have already made ${parseInt(
+            process.env.requestsPerMonth
+          )} requests in this month`,
+          404
+        )
       );
-    request.status = "confirmed";
-    //send a mail to user that request is confirmed
-    var mailOptions = {
-      from: process.env.NODEMAILER_ID,
-      to: request.bookedby.mailId,
-      subject: "GATE-PASS Request",
-      text: `${request.bookedby.name} your Gate Pass request is ${request.status}`,
-      attachments: [
-        {
-          filename: "qr.png",
-          path: "./public/myqr.png",
-          cid: "unique@cid",
-        },
-      ],
-    };
+    else {
+      request.status = "confirmed";
+      //send a mail to user that request is confirmed
+      var mailOptions = {
+        from: process.env.NODEMAILER_ID,
+        to: request.bookedby.mailId,
+        subject: "GATE-PASS Request",
+        text: `${request.bookedby.name} your Gate Pass request is ${request.status}`,
+        attachments: [
+          {
+            filename: "qr.png",
+            path: "./public/myqr.png",
+            cid: "unique@cid",
+          },
+        ],
+      };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else console.log("Mail send successfully");
-    });
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else console.log("Mail send successfully");
+      });
 
-    await request.save();
-    res.status(200).send("Request is Confirmed");
+      await request.save();
+
+      //Delete the other request is requestsPerMonth of ceertain user===2
+      if (
+        requsetUser.requestsPerMonth ===
+        parseInt(process.env.requestsPerMonth) - 1
+      ) {
+        const remainingPendingRequest = requsetUser.requests.filter(
+          (req) =>
+            req.status === "pending" &&
+            req._id.toString() !== request._id.toString()
+        );
+        remainingPendingRequest.map(
+          async (req) => await requestModel.findByIdAndDelete(req._id)
+        );
+      }
+
+      res.status(200).send("Request is Confirmed");
+    }
   }
 });
