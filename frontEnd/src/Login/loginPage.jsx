@@ -1,12 +1,11 @@
-import { useState } from "react";
+import React, { useContext} from "react";
 import { useTheme } from "@mui/material/styles";
-import axiosInstance from "../util/axiosIntance";
+import { Navigate } from "react-router";
+import { AuthContext } from "../context/auth";
 import {
-  Box,
   Button,
   Divider,
   Grid,
-  useMediaQuery,
   Card,
   Stack,
   ListItem,
@@ -14,10 +13,10 @@ import {
 } from "@mui/material";
 import { ReactComponent as Google } from "../assets/GoogleLogo.svg";
 import GateLogo from "../assets/Logo.png";
-import axios from "axios";
-const FirebaseLogin = ({ ...others }) => {
+const FirebaseLogin = () => {
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
+  const authCtx = useContext(AuthContext);
+  if (authCtx && authCtx.user) return <Navigate to="/Admin/requests" />;
   const oAuthUrl = "http://localhost:9000/api/v1/auth/google";
   const googleLoginHandler = async () => {
     // const response = await axios.get(oAuthUrl);

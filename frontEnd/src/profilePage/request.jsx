@@ -35,7 +35,7 @@ function request(props) {
   const requestId = props.id;
   const deleteRequestHandler = async () => {
     props.onDelete(requestId);
-    const response = await axiosInstance.get(
+     await axiosInstance.get(
       `http://localhost:9000/api/v1/request/delete-request/${requestId}`
     );
     // navigate('/user/profile-page');

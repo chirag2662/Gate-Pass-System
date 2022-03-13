@@ -66,7 +66,8 @@ export default function ProfilePage(props) {
     setHostel(hostel);
   }, [props]);
   const removeRequestHandler = (id) => {
-    setRequest(userRequest.filter((req) => req._id !== id));
+    const req = userRequest.filter((req) => req._id !== id);
+    setRequest(req);
   };
   const textFieldColor = "grey";
   const textFieldSX = {
@@ -84,7 +85,7 @@ export default function ProfilePage(props) {
       hostel: Hostel,
       branch: Branch,
     };
-    const response = await axiosInstance.post(
+    await axiosInstance.post(
       "http://localhost:9000/api/v1/user/updateMe",
       body
     );
@@ -445,7 +446,7 @@ export default function ProfilePage(props) {
               backgroundColor: "",
             }}
           >
-            {!isEdit && (
+            {/* {!isEdit && (
               <Button
                 variant="outlined"
                 fullWidth={true}
@@ -489,8 +490,8 @@ export default function ProfilePage(props) {
               >
                 Save Profile
               </Button>
-            </div>
-          )}
+            )} */}
+          </div>
         </Card>
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -527,8 +528,8 @@ export default function ProfilePage(props) {
             </Typography>
           </CardContent>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
-            {requests.length == 1 ? (
-              requests.map((elem) => {
+            {userRequest.length == 1 ? (
+              userRequest.map((elem) => {
                 return (
                   <Item
                     style={{
@@ -554,11 +555,12 @@ export default function ProfilePage(props) {
               })
             ) : (
               <Grid container>
-                {requests.map((elem) => {
+                {userRequest.map((elem) => {
                   return (
                     <Grid item xs={12} sm={12} md={6} style={{}}>
                       <Request
                         id={elem._id}
+                        key={elem._id}
                         date={elem.Date}
                         reason={elem.reason}
                         status={elem.status}

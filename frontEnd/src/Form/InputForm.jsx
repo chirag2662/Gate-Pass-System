@@ -25,17 +25,17 @@ export default function InputForm() {
   const authCtx = React.useContext(AuthContext);
   const navigate = useNavigate();
   const [reason, setReason] = React.useState("");
-  const [modeOfTracvel, setModeOfTravel] = React.useState("");
+  const [modeOfTravel, setModeOfTravel] = React.useState("");
   const [checkRequest, setCheckRequest] = React.useState(false);
   const [buttonOscillator, setButtonOscillator] = React.useState(false);
   React.useEffect(() => {
-    if (modeOfTracvel && reason && value) setButtonOscillator(false);
+    if (modeOfTravel && reason && value) setButtonOscillator(false);
     else setButtonOscillator(true);
   });
   async function handleClick(e) {
     setCheckRequest(true);
     const body = {
-      modeOfTracvel,
+      modeOfTravel,
       reason,
       Date: value,
     };
@@ -132,13 +132,13 @@ export default function InputForm() {
                         <TextField
                           {...params}
                           fullWidth={true}
-                          InputProps={{
-                            style: {
-                              color: "grey",
-                              fontFamily: `'Robot',sans-serif`,
-                              fontWeight: 700,
-                            },
-                          }}
+                          // InputProps={{
+                          //   style: {
+                          //     color: "grey",
+                          //     fontFamily: `'Robot',sans-serif`,
+                          //     fontWeight: 700,
+                          //   },
+                          // }}
                         />
                       )}
                     />
@@ -147,10 +147,10 @@ export default function InputForm() {
                     <TextField
                       id="outlined-basic"
                       label="Mode Of Travel"
-                      value={modeOfTracvel}
-                      error={!modeOfTracvel && checkRequest}
+                      value={modeOfTravel}
+                      error={!modeOfTravel && checkRequest}
                       helperText={
-                        !modeOfTracvel && checkRequest ? (
+                        !modeOfTravel && checkRequest ? (
                           <div style={{ marginLeft: "-10px" }}>
                             Mode Of Travel can't be empty
                           </div>
@@ -162,13 +162,13 @@ export default function InputForm() {
                       variant="outlined"
                       fullWidth={true}
                       multiline={true}
-                      inputProps={{
-                        style: {
-                          color: "grey",
-                          fontFamily: `'Robot',sans-serif`,
-                          fontWeight: 700,
-                        },
-                      }}
+                      // inputProps={{
+                      //   style: {
+                      //     color: "grey",
+                      //     fontFamily: `'Robot',sans-serif`,
+                      //     fontWeight: 700,
+                      //   },
+                      // }}
                       InputProps={{
                         style: {
                           color: "grey",

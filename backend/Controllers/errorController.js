@@ -42,7 +42,7 @@ const sendErrorProd = (err, req, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  console.log("Hi");
+  console.log("Error from errorController");
   err.statusCode = err.statusCode || 500; //internal server error
   err.status = err.status || "error"; // status -> fail
 

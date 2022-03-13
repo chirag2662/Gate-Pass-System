@@ -25,10 +25,10 @@ const textFieldSX = {
 };
 
 export default function request(props) {
-  const {bookedBy, modeOfTravel, status, reason, Date, _id} = props.request;
+  const {bookedby, status, reason, Date, _id} = props.request;
   const changeStatusHandler = async (e) => {
     const finalStatus = e.target.value;
-    const response = await axiosInstance.get(`http://localhost:9000/api/v1/request/admin/${_id}/${finalStatus}`);
+     await axiosInstance.get(`http://localhost:9000/api/v1/request/admin/${_id}/${finalStatus}`);
     props.onDelete(_id);
   }
   return (
@@ -51,7 +51,7 @@ export default function request(props) {
                 User's Roll no.
               </Typography>
             }
-            defaultValue={bookedBy && bookedBy.rollNo}
+            value={bookedby && bookedby.rollNo}
             fullWidth={true}
             inputProps={{
               style: {
