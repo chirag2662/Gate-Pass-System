@@ -61,7 +61,7 @@ exports.getRequestForm = catchAsync(async (req, res) => {
   let requestsPerMonth = false;
   if (user.requestsPerMonth >= parseInt(process.env.requestsPerMonth))
     requestsPerMonth = true;
-  res.status(200).render("requestForm", { user: user, requestsPerMonth });
+  res.status(200).render("requestForm", { user: user, requestsPerMonth ,path:"/request-form"});
 });
 
 exports.deleteRequest = catchAsync(async (req, res) => {

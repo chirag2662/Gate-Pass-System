@@ -49,7 +49,7 @@ exports.getUser = catchAsync(async (req, res) => {
     return next(new AppError("No doc found with that id", 404));
   }
 
-  res.status(200).render("userProfile", { user });
+  res.status(200).render("userProfile", { user,path:'/user-profile' });
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {

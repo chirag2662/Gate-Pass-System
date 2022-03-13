@@ -1,0 +1,32 @@
+   <div class="row">
+    <div class="profile-nav col-md-3">
+      <div class="panel">
+        <div class="user-heading round">
+          <a href="#" > <img src="<%-user.image%>" alt="user image" /> </a>
+          <h1>
+            <%=user.name%>
+          </h1>
+          <p>
+            <%=user.mailId%>
+          </p>
+        </div>
+
+        <ul class="nav nav-pills nav-stacked">
+          <li class="<%= path!=='/request-form'?'active' : ''%>">
+            <a href="/user/profile-page">
+              <i class="fa fa-user"></i> Profile</a>
+          </li>
+          <li class="<%= path==='/request-form'?'active' : ''%>">
+            <a href="/request/request-form">
+              <i class="fa fa-edit"></i> New Request</a>
+          </li>
+          <li>
+            <a href="/logout"> <i class="fa fa-edit"></i> Log Out</a>
+          </li>
+          <!-- <li><a href="/user/deleteMe"> <i class="fa fa-edit"></i> Delete Account</a></li> -->
+        </ul>
+      </div>
+    </div>
+    <div class="profile-info col-md-9">
+      <div class="panel">
+        <div class="bio-graph-heading">WELCOME TO GATE PASS SYSTEM</div>
