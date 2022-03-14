@@ -6,14 +6,12 @@ import {
   Typography,
   ListItem as Item,
   Card,
-  CardHeader,
   Button,
   Alert,
 } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AppBar from "../AppBar/appBar.jsx";
-import GarageIcon from "@mui/icons-material/Garage";
 import { DatePicker } from "@mui/lab";
 import axiosInstance from "../util/axiosIntance";
 import { Navigate, useNavigate } from "react-router";
@@ -31,7 +29,7 @@ export default function InputForm() {
   React.useEffect(() => {
     if (modeOfTravel && reason && value) setButtonOscillator(false);
     else setButtonOscillator(true);
-  });
+  }, [modeOfTravel, reason, value]);
   async function handleClick(e) {
     setCheckRequest(true);
     const body = {
@@ -40,7 +38,7 @@ export default function InputForm() {
       Date: value,
     };
     const ans = await axiosInstance.post(
-      "http://localhost:9000/api/v1/request/new-request",
+      `${process.env.REACT_APP_BACKEND_HOST}/request/new-request`,
       body
     );
     if (ans.status === 200) navigate("/user/profile-page", { replace: true });

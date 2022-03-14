@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Navigate } from "react-router";
 import { AuthContext } from "../context/auth";
@@ -16,8 +16,10 @@ import GateLogo from "../assets/Logo.png";
 const FirebaseLogin = () => {
   const theme = useTheme();
   const authCtx = useContext(AuthContext);
-  if (authCtx && authCtx.user) return <Navigate to="/Admin/requests" />;
-  const oAuthUrl = "http://localhost:9000/api/v1/auth/google";
+  if (authCtx && authCtx.user && authCtx.user.isAdmin)
+    return <Navigate to="/Admin/requests" />;
+  else if (authCtx && authCtx.user) return <Navigate to="/user/profile-page" />;
+  const oAuthUrl = `${process.env.REACT_APP_BACKEND_HOST}/auth/google`;
   const googleLoginHandler = async () => {
     // const response = await axios.get(oAuthUrl);
     // console.log(response);

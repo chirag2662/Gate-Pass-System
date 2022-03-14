@@ -1,7 +1,9 @@
 const express = require("express");
 const passport = require("passport");
+const dotenv = require("dotenv");
 const router = express.Router();
-const { ensureAuth, ensureGuest } = require("../middleware/auth");
+dotenv.config();
+const frontEnd_Host=process.env.FRONTEND_HOST;
 
 router.get("/", (req, res) => {
   res.render("main");
@@ -17,13 +19,13 @@ router.get(
 router.get(
   "/login/google",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:3000/user/profile-page",
-    failureRedirect: "http://localhost:3000/",
+    successRedirect: `${frontEnd_Host}/user/profile-page`,
+    failureRedirect: `${frontEnd_Host}/`,
   })
 );
 
 router.get("/logout", (req, res) => {
   req.logout();
-  res.redirect("http://localhost:3000");
+  res.redirect(`${frontEnd_Host}`);
 });
 module.exports = router;

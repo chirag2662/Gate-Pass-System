@@ -18,7 +18,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const getUser = async () => {
       const response = await axiosInstance.get(
-        "http://localhost:9000/api/v1/user/profile-page"
+        `${process.env.REACT_APP_BACKEND_HOST}/user/profile-page`
       );
 
       const {
@@ -33,7 +33,7 @@ export default function ProfilePage() {
         mailId,
       } = response.data.data.user;
       if (name && phoneNo && hostel && rollNo && roomNo && branch)
-      localStorage.setItem("requestForm", true);
+        localStorage.setItem("requestForm", true);
       else localStorage.setItem("requestForm", false);
       const { token } = response.data.data;
       authCtx.login({ name, token, mailId });
@@ -50,8 +50,11 @@ export default function ProfilePage() {
   }, [authCtx]);
 
   const { user } = authCtx;
-  if (!user) return <Navigate to="/" />;
-  if (user && user.isAdmin) return <Navigate to="/Admin/requests" />;
+  if (!user)
+    setTimeout(() => {
+      if (!user) return <Navigate to="/" />;
+      if (user && user.isAdmin) return <Navigate to="/Admin/requests" />;
+    }, 500);
   return (
     <ProfilePageCard
       name={name}

@@ -1,8 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const path = require("path");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
@@ -37,7 +35,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_HOST,
     credentials: true,
   })
 );
@@ -45,7 +43,7 @@ app.use(
 app.use(express.json());
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", process.env.FRONTEND_HOST);
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Credentials", true);

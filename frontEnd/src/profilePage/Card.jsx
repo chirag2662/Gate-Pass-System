@@ -1,29 +1,14 @@
 import * as React from "react";
-import { Navigate } from "react-router";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
 import { Button, Typography } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
 import { Grid, TextField, ListItem as Item } from "@mui/material";
 import Request from "./request";
-import axiosInstance from "../util/axiosIntance";
 import { useState } from "react";
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+
 export default function ProfilePage(props) {
   const [expanded, setExpanded] = React.useState(false);
   const handleExpandClick = () => {
@@ -44,27 +29,33 @@ export default function ProfilePage(props) {
     hostelRoomNumber,
   } = props;
   const [Name, setName] = React.useState(name);
-  const [isEdit, setIsEdit] = useState(false);
+  // const [isEdit, setIsEdit] = useState(false);
   const [RollNumber, setRollNumber] = React.useState(rollNumber);
   const [PhoneNumber, setPhoneNumber] = React.useState(phoneNumber);
   const [Branch, setBranch] = React.useState(branch);
-  const [Image, setImage] = React.useState(image);
-  const [Requests, setRequests] = React.useState(requests);
   const [Hostel, setHostel] = React.useState(hostel);
   const [HostelRoomNumber, setHostelRoomNumber] =
     React.useState(hostelRoomNumber);
   const [userRequest, setRequest] = useState(requests);
   const [readOnlyChecker, setReadOnlyChecker] = useState(true);
+  // setReadOnlyChecker(true);
   React.useEffect(() => {
     setName(name);
     setRollNumber(rollNumber);
     setPhoneNumber(phoneNumber);
     setBranch(branch);
     setRequest(requests);
-    setImage(image);
     setHostelRoomNumber(hostelRoomNumber);
     setHostel(hostel);
-  }, [props]);
+  }, [
+    name,
+    rollNumber,
+    phoneNumber,
+    branch,
+    requests,
+    hostel,
+    hostelRoomNumber,
+  ]);
   const removeRequestHandler = (id) => {
     const req = userRequest.filter((req) => req._id !== id);
     setRequest(req);
@@ -76,22 +67,22 @@ export default function ProfilePage(props) {
       color: `${textFieldColor} !important`,
     },
   };
-  async function handleSaveProfile(e) {
-    e.preventDefault();
-    const body = {
-      rollNo: RollNumber,
-      phoneNo: PhoneNumber,
-      roomNo: HostelRoomNumber,
-      hostel: Hostel,
-      branch: Branch,
-    };
-    await axiosInstance.post(
-      "http://localhost:9000/api/v1/user/updateMe",
-      body
-    );
-    setIsEdit(false);
-    return <Navigate to="/user/profile-page" />;
-  }
+  // async function handleSaveProfile(e) {
+  //   e.preventDefault();
+  //   const body = {
+  //     rollNo: RollNumber,
+  //     phoneNo: PhoneNumber,
+  //     roomNo: HostelRoomNumber,
+  //     hostel: Hostel,
+  //     branch: Branch,
+  //   };
+  //   await axiosInstance.post(
+  //     "http://localhost:9000/api/v1/user/updateMe",
+  //     body
+  //   );
+  //   // setIsEdit(false);
+  //   return <Navigate to="/user/profile-page" />;
+  // }
   return (
     <Grid container>
       <Grid item xs={12} sm={6}>
@@ -528,13 +519,11 @@ export default function ProfilePage(props) {
             </Typography>
           </CardContent>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
-            {userRequest.length == 1 ? (
+            {userRequest.length === 1 ? (
               userRequest.map((elem) => {
                 return (
                   <Item
                     style={{
-                      display: "flex",
-                      alignContent: "center",
                       display: "flex",
                       alignContent: "center",
                       alignItems: "center",
